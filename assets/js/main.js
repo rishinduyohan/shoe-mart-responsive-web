@@ -9,13 +9,48 @@
   const productCards = document.querySelectorAll('.product-card');
   const addCartBtns = document.querySelectorAll('.btn-add-cart');
   const wishlistBtns = document.querySelectorAll('.wishlist-btn');
-  const cartCount = document.getElementById('cart-count');
+  const cartBadge = document.getElementById('cart-badge');
+  const cartTotalDisplay = document.getElementById('header-cart-total');
+  const profileBtn = document.getElementById('profile-btn');
+  const langBtn = document.getElementById('lang-btn');
+  const searchBtn = document.getElementById('search-btn');
+  const searchOverlay = document.getElementById('search-overlay');
+  const searchClose = document.getElementById('search-close');
+  const searchInput = document.getElementById('search-input');
+  const searchForm = document.getElementById('search-form');
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-message');
   const newsletterForm = document.getElementById('newsletter-form');
 
-  let cartTotal = 0;
+  let cartCountValue = 0;
+  let cartTotalPriceValue = 0;
   let currentSlide = 0;
+
+  if (searchBtn && searchOverlay) {
+    searchBtn.addEventListener('click', () => {
+      searchOverlay.classList.add('active');
+      setTimeout(() => searchInput.focus(), 300);
+    });
+  }
+
+  if (searchClose && searchOverlay) {
+    searchClose.addEventListener('click', () => {
+      searchOverlay.classList.remove('active');
+      searchInput.value = '';
+    });
+  }
+
+  if (searchForm) {
+    searchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const query = searchInput.value.trim();
+      if (query) {
+        showToast('Searching for: ' + query);
+        searchOverlay.classList.remove('active');
+        searchInput.value = '';
+      }
+    });
+  }
 
   const slidesContainer = document.querySelector('.hero-slides');
   const slideCount = document.querySelectorAll('.hero-slide').length;
@@ -50,15 +85,22 @@
     });
   });
 
+  if (profileBtn) {
+    profileBtn.addEventListener('click', () => showToast('Opening your profile...'));
+  }
+  if (langBtn) {
+    langBtn.addEventListener('click', () => showToast('Language selection coming soon!'));
+  }
+
   const products = [
-    { id: 1, name: 'Work Shoe', category: 'men', price: '12,500', oldPrice: '15,000', discount: 16, rating: 4, image: 'assets/images/shoe-casual.png' },
-    { id: 2, name: 'Women Casual', category: 'women', price: '8,900', oldPrice: '12,000', discount: 25, rating: 4, image: 'assets/images/shoe-runner.png' },
-    { id: 3, name: 'Men Casual', category: 'men', price: '14,200', oldPrice: '18,500', discount: 23, rating: 4, image: 'assets/images/shoe-athletic.png' },
-    { id: 4, name: 'Women Casual', category: 'women', price: '9,500', oldPrice: '13,000', discount: 27, rating: 4, image: 'assets/images/shoe-heels.png' },
-    { id: 5, name: 'Women Casual', category: 'women', price: '11,000', oldPrice: '14,500', discount: 24, rating: 4, image: 'assets/images/shoe-boots.png' },
-    { id: 6, name: 'Men Casual', category: 'men', price: '15,800', oldPrice: '20,000', discount: 21, rating: 5, image: 'assets/images/shoe-loafer.png' },
-    { id: 7, name: 'Unisex Casual', category: 'unisex', price: '13,400', oldPrice: '17,000', discount: 21, rating: 4, image: 'assets/images/shoe-hiking.png' },
-    { id: 8, name: 'Men Casual', category: 'men', price: '10,500', oldPrice: '13,500', discount: 22, rating: 4, image: 'assets/images/shoe-runner.png' }
+    { id: 1, name: 'Work Shoe', category: 'men', price: '12,500', oldPrice: '15,000', discount: 16, rating: 4, image: 'assets/images/shoe-casual.png', priceValue: 12500 },
+    { id: 2, name: 'Women Casual', category: 'women', price: '8,900', oldPrice: '12,000', discount: 25, rating: 4, image: 'assets/images/shoe-runner.png', priceValue: 8900 },
+    { id: 3, name: 'Men Casual', category: 'men', price: '14,200', oldPrice: '18,500', discount: 23, rating: 4, image: 'assets/images/shoe-athletic.png', priceValue: 14200 },
+    { id: 4, name: 'Women Casual', category: 'women', price: '9,500', oldPrice: '13,000', discount: 27, rating: 4, image: 'assets/images/shoe-heels.png', priceValue: 9500 },
+    { id: 5, name: 'Women Casual', category: 'women', price: '11,000', oldPrice: '14,500', discount: 24, rating: 4, image: 'assets/images/shoe-boots.png', priceValue: 11000 },
+    { id: 6, name: 'Men Casual', category: 'men', price: '15,800', oldPrice: '20,000', discount: 21, rating: 5, image: 'assets/images/shoe-loafer.png', priceValue: 15800 },
+    { id: 7, name: 'Unisex Casual', category: 'unisex', price: '13,400', oldPrice: '17,000', discount: 21, rating: 4, image: 'assets/images/shoe-hiking.png', priceValue: 13400 },
+    { id: 8, name: 'Men Casual', category: 'men', price: '10,500', oldPrice: '13,500', discount: 22, rating: 4, image: 'assets/images/shoe-runner.png', priceValue: 10500 }
   ];
 
   const productsGrid = document.getElementById('products-grid');
@@ -77,6 +119,7 @@
       card.innerHTML = `
         <div class="product-img-wrap">
           <img src="${product.image}" alt="${product.name}" loading="lazy">
+          <button class="btn-add-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.priceValue}">Add to Cart</button>
         </div>
         <div class="product-info">
           <h3>${product.name}</h3>
@@ -110,10 +153,10 @@
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener('click', function() {
       const extraProducts = [
-        { id: 9, name: 'Casual Comfort', category: 'unisex', price: '9,800', oldPrice: '13,000', discount: 25, rating: 4, image: 'assets/images/shoe-casual.png' },
-        { id: 10, name: 'Work Pro', category: 'men', price: '16,500', oldPrice: '21,000', discount: 21, rating: 4, image: 'assets/images/shoe-casual.png' },
-        { id: 11, name: 'Women Style', category: 'women', price: '11,200', oldPrice: '15,000', discount: 25, rating: 4, image: 'assets/images/shoe-heels.png' },
-        { id: 12, name: 'Men Sport', category: 'men', price: '14,900', oldPrice: '19,500', discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png' }
+        { id: 9, name: 'Casual Comfort', category: 'unisex', price: '9,800', oldPrice: '13,000', discount: 25, rating: 4, image: 'assets/images/shoe-casual.png', priceValue: 9800 },
+        { id: 10, name: 'Work Pro', category: 'men', price: '16,500', oldPrice: '21,000', discount: 21, rating: 4, image: 'assets/images/shoe-casual.png', priceValue: 16500 },
+        { id: 11, name: 'Women Style', category: 'women', price: '11,200', oldPrice: '15,000', discount: 25, rating: 4, image: 'assets/images/shoe-heels.png', priceValue: 11200 },
+        { id: 12, name: 'Men Sport', category: 'men', price: '14,900', oldPrice: '19,500', discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png', priceValue: 14900 }
       ];
       
       extraProducts.forEach(product => {
@@ -128,12 +171,24 @@
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('btn-add-cart')) {
       const btn = e.target;
-      cartTotal++;
-      cartCount.textContent = cartTotal;
-      cartCount.style.animation = 'none';
-      void cartCount.offsetWidth;
-      cartCount.style.animation = 'pop .3s ease';
-      showToast(btn.dataset.product + ' added to cart!');
+      const price = parseInt(btn.dataset.price);
+      const name = btn.dataset.name;
+      
+      cartCountValue++;
+      cartTotalPriceValue += price;
+      
+      if (cartBadge) {
+        cartBadge.textContent = cartCountValue;
+        cartBadge.style.animation = 'none';
+        void cartBadge.offsetWidth;
+        cartBadge.style.animation = 'pop .3s ease';
+      }
+      
+      if (cartTotalDisplay) {
+        cartTotalDisplay.textContent = 'Rs. ' + cartTotalPriceValue.toLocaleString();
+      }
+      
+      showToast(name + ' added to cart!');
     }
   });
 
