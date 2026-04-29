@@ -26,7 +26,6 @@
       <nav class="main-nav" id="main-nav" aria-label="Primary navigation">
         <ul class="nav-list" role="list">
           <li><a href="#hero" class="nav-link active">Home</a></li>
-          <li><a href="#collections" class="nav-link">Collections</a></li>
           <li><a href="#products" class="nav-link">Shop</a></li>
           <li><a href="#about" class="nav-link">About</a></li>
           <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -101,162 +100,28 @@
       </div>
     </section>
 
-    <!-- ═══ COLLECTIONS ═══ -->
-    <section class="collections" id="collections" aria-labelledby="collections-heading">
-      <div class="section-header">
-        <span class="section-tag">Curated For You</span>
-        <h2 id="collections-heading">Our Collections</h2>
-        <p class="section-desc">From everyday comfort to special occasions — find your perfect pair.</p>
-      </div>
-      <div class="collections-grid">
-        <article class="collection-card collection-card--large" id="collection-casual">
-          <img src="assets/images/shoe-casual.png" alt="Classic black and white canvas sneakers" width="400" height="400" loading="lazy">
-          <div class="collection-overlay">
-            <h3>Casual</h3>
-            <p>Effortless everyday style</p>
-            <a href="#products" class="btn btn-sm" aria-label="Browse casual collection">Browse</a>
-          </div>
-        </article>
-        <article class="collection-card" id="collection-formal">
-          <img src="assets/images/shoe-loafer.png" alt="Elegant navy blue leather loafers" width="400" height="400" loading="lazy">
-          <div class="collection-overlay">
-            <h3>Formal</h3>
-            <p>Refined elegance</p>
-            <a href="#products" class="btn btn-sm" aria-label="Browse formal collection">Browse</a>
-          </div>
-        </article>
-        <article class="collection-card" id="collection-athletic">
-          <img src="assets/images/shoe-athletic.png" alt="Red and black athletic sports shoes" width="400" height="400" loading="lazy">
-          <div class="collection-overlay">
-            <h3>Athletic</h3>
-            <p>Peak performance</p>
-            <a href="#products" class="btn btn-sm" aria-label="Browse athletic collection">Browse</a>
-          </div>
-        </article>
-      </div>
-    </section>
+
 
     <!-- ═══ PRODUCTS ═══ -->
     <section class="products" id="products" aria-labelledby="products-heading">
       <div class="section-header">
-        <span class="section-tag">Trending Now</span>
         <h2 id="products-heading">Featured Products</h2>
         <p class="section-desc">Our most loved styles, handpicked for you.</p>
       </div>
       <div class="product-filters" role="tablist" aria-label="Product category filter">
-        <button class="filter-btn active" role="tab" aria-selected="true" data-filter="all" id="filter-all">All</button>
-        <button class="filter-btn" role="tab" aria-selected="false" data-filter="casual" id="filter-casual">Casual</button>
-        <button class="filter-btn" role="tab" aria-selected="false" data-filter="formal" id="filter-formal">Formal</button>
-        <button class="filter-btn" role="tab" aria-selected="false" data-filter="athletic" id="filter-athletic">Athletic</button>
-        <button class="filter-btn" role="tab" aria-selected="false" data-filter="outdoor" id="filter-outdoor">Outdoor</button>
+        <button class="filter-btn active" role="tab" aria-selected="true" data-filter="all">All</button>
+        <button class="filter-btn" role="tab" aria-selected="false" data-filter="women">WOMEN</button>
+        <button class="filter-btn" role="tab" aria-selected="false" data-filter="men">MEN</button>
+        <button class="filter-btn" role="tab" aria-selected="false" data-filter="unisex">UNISEX</button>
+        <button class="filter-btn" role="tab" aria-selected="false" data-filter="casual">CASUAL</button>
       </div>
       <div class="products-grid" id="products-grid" role="tabpanel">
-        <article class="product-card" data-category="casual" id="product-1">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-casual.png" alt="Urban Stride canvas sneakers in black and white" width="300" height="300" loading="lazy">
-            <span class="product-badge">New</span>
-            <button class="wishlist-btn" aria-label="Add Urban Stride to wishlist">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Urban Stride</h3>
-            <div class="product-rating" aria-label="4.5 out of 5 stars">★★★★<span class="star-half">★</span></div>
-            <div class="product-price"><span class="price-current">$89</span><span class="price-old">$120</span></div>
-            <button class="btn btn-add-cart" data-product="Urban Stride" data-price="89">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="formal" id="product-2">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-loafer.png" alt="Monaco navy blue leather loafers" width="300" height="300" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Monaco Loafer</h3>
-            <div class="product-rating" aria-label="5 out of 5 stars">★★★★★</div>
-            <div class="product-price"><span class="price-current">$145</span></div>
-            <button class="btn btn-add-cart" data-product="Monaco Loafer" data-price="145">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="athletic" id="product-3">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-athletic.png" alt="Velocity red and black athletic shoes" width="300" height="300" loading="lazy">
-            <span class="product-badge badge-sale">-25%</span>
-            <button class="wishlist-btn" aria-label="Add Velocity Pro to wishlist">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Velocity Pro</h3>
-            <div class="product-rating" aria-label="4 out of 5 stars">★★★★<span class="star-empty">☆</span></div>
-            <div class="product-price"><span class="price-current">$97</span><span class="price-old">$129</span></div>
-            <button class="btn btn-add-cart" data-product="Velocity Pro" data-price="97">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="casual" id="product-4">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-runner.png" alt="Cloud Runner white and grey sneakers" width="300" height="300" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Cloud Runner</h3>
-            <div class="product-rating" aria-label="4.5 out of 5 stars">★★★★<span class="star-half">★</span></div>
-            <div class="product-price"><span class="price-current">$112</span></div>
-            <button class="btn btn-add-cart" data-product="Cloud Runner" data-price="112">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="outdoor" id="product-5">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-hiking.png" alt="Summit brown leather hiking boots" width="300" height="300" loading="lazy">
-            <span class="product-badge">Popular</span>
-            <button class="wishlist-btn" aria-label="Add Summit Trek to wishlist">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Summit Trek</h3>
-            <div class="product-rating" aria-label="4.5 out of 5 stars">★★★★<span class="star-half">★</span></div>
-            <div class="product-price"><span class="price-current">$168</span></div>
-            <button class="btn btn-add-cart" data-product="Summit Trek" data-price="168">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="formal" id="product-6">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-heels.png" alt="Aurelia beige stiletto heels" width="300" height="300" loading="lazy">
-            <span class="product-badge badge-sale">-20%</span>
-            <button class="wishlist-btn" aria-label="Add Aurelia Heels to wishlist">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-            </button>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Aurelia Heels</h3>
-            <div class="product-rating" aria-label="5 out of 5 stars">★★★★★</div>
-            <div class="product-price"><span class="price-current">$136</span><span class="price-old">$170</span></div>
-            <button class="btn btn-add-cart" data-product="Aurelia Heels" data-price="136">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="outdoor" id="product-7">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-boots.png" alt="Terra tan suede chelsea boots" width="300" height="300" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Terra Chelsea</h3>
-            <div class="product-rating" aria-label="4 out of 5 stars">★★★★<span class="star-empty">☆</span></div>
-            <div class="product-price"><span class="price-current">$155</span></div>
-            <button class="btn btn-add-cart" data-product="Terra Chelsea" data-price="155">Add to Cart</button>
-          </div>
-        </article>
-        <article class="product-card" data-category="athletic" id="product-8">
-          <div class="product-img-wrap">
-            <img src="assets/images/shoe-runner.png" alt="Nimbus white performance running shoes" width="300" height="300" loading="lazy">
-            <span class="product-badge">New</span>
-          </div>
-          <div class="product-info">
-            <h3 class="product-name">Nimbus Run</h3>
-            <div class="product-rating" aria-label="4.5 out of 5 stars">★★★★<span class="star-half">★</span></div>
-            <div class="product-price"><span class="price-current">$125</span></div>
-            <button class="btn btn-add-cart" data-product="Nimbus Run" data-price="125">Add to Cart</button>
-          </div>
-        </article>
+        <!-- Products will be loaded dynamically by JavaScript -->
       </div>
+      <div class="load-more-container">
+        <button id="load-more-btn" class="btn-load-more">LOAD MORE</button>
+      </div>
+    </section>
     </section>
 
     <!-- ═══ ABOUT / STORY ═══ -->
@@ -305,7 +170,6 @@
         <h3>Quick Links</h3>
         <ul role="list">
           <li><a href="#hero">Home</a></li>
-          <li><a href="#collections">Collections</a></li>
           <li><a href="#products">Shop</a></li>
           <li><a href="#about">About</a></li>
         </ul>

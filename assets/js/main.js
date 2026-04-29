@@ -59,6 +59,49 @@
     });
   });
 
+  /* ── Products Data ── */
+  const products = [
+    { id: 1, name: 'Work Shoe', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-casual.png' },
+    { id: 2, name: 'Women Casual', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-runner.png' },
+    { id: 3, name: 'Men Casual', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png' },
+    { id: 4, name: 'Women Casual', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-heels.png' },
+    { id: 5, name: 'Women Casual', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-boots.png' },
+    { id: 6, name: 'Men Casual', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 5, image: 'assets/images/shoe-loafer.png' },
+    { id: 7, name: 'Unisex Casual', category: 'unisex', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-hiking.png' },
+    { id: 8, name: 'Men Casual', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-runner.png' }
+  ];
+
+  const productsGrid = document.getElementById('products-grid');
+
+  function renderProducts(filter = 'all') {
+    if (!productsGrid) return;
+    productsGrid.innerHTML = '';
+    
+    const filteredProducts = filter === 'all' 
+      ? products 
+      : products.filter(p => p.category === filter || (filter === 'casual' && p.name.toLowerCase().includes('casual')));
+
+    filteredProducts.forEach(product => {
+      const card = document.createElement('article');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-img-wrap">
+          <img src="${product.image}" alt="${product.name}" loading="lazy">
+        </div>
+        <div class="product-info">
+          <h3>${product.name}</h3>
+          <div class="product-rating">${'★'.repeat(product.rating)}${'☆'.repeat(5 - product.rating)}</div>
+          <div class="product-price">
+            <span class="price-current">$${product.price}</span>
+            <span class="price-old">$${product.oldPrice}</span>
+            <span class="price-discount">${product.discount}% Off</span>
+          </div>
+        </div>
+      `;
+      productsGrid.appendChild(card);
+    });
+  }
+
   /* ── Product filters ── */
   filterBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -68,57 +111,77 @@
       });
       btn.classList.add('active');
       btn.setAttribute('aria-selected', 'true');
-
-      var filter = btn.dataset.filter;
-      productCards.forEach(function (card) {
-        if (filter === 'all' || card.dataset.category === filter) {
-          card.classList.remove('hidden');
-          card.style.animation = 'fadeIn .4s ease forwards';
-        } else {
-          card.classList.add('hidden');
-        }
-      });
+      renderProducts(btn.dataset.filter);
     });
   });
 
+  // Initial render
+  renderProducts();
+
+  /* ── Load More ── */
+  const loadMoreBtn = document.getElementById('load-more-btn');
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function() {
+      // simulate loading more products
+      const extraProducts = [
+        { id: 9, name: 'Casual Comfort', category: 'unisex', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-casual.png' },
+        { id: 10, name: 'Work Pro', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-casual.png' },
+        { id: 11, name: 'Women Style', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-heels.png' },
+        { id: 12, name: 'Men Sport', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png' }
+      ];
+      
+      extraProducts.forEach(product => {
+        products.push(product);
+      });
+      
+      renderProducts(document.querySelector('.filter-btn.active').dataset.filter);
+      loadMoreBtn.style.display = 'none'; // hide after loading more for this demo
+    });
+  }
+
   /* ── Add to cart ── */
-  addCartBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-add-cart')) {
+      const btn = e.target;
       cartTotal++;
       cartCount.textContent = cartTotal;
       cartCount.style.animation = 'none';
       void cartCount.offsetWidth; // reflow
       cartCount.style.animation = 'pop .3s ease';
       showToast(btn.dataset.product + ' added to cart!');
-    });
+    }
   });
 
   /* ── Wishlist toggle ── */
-  wishlistBtns.forEach(function (btn) {
-    btn.addEventListener('click', function () {
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('wishlist-btn')) {
+      const btn = e.target;
       btn.classList.toggle('active');
-      var name = btn.closest('.product-card').querySelector('.product-name').textContent;
+      var name = btn.closest('.product-card').querySelector('h3').textContent;
       if (btn.classList.contains('active')) {
         showToast(name + ' added to wishlist ♥');
       } else {
         showToast(name + ' removed from wishlist');
       }
-    });
+    }
   });
 
   /* ── Newsletter ── */
-  newsletterForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    var email = document.getElementById('newsletter-email').value;
-    if (email) {
-      showToast('Welcome aboard! Check ' + email + ' for updates.');
-      newsletterForm.reset();
-    }
-  });
+  if (newsletterForm) {
+    newsletterForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = document.getElementById('newsletter-email').value;
+      if (email) {
+        showToast('Welcome aboard! Check ' + email + ' for updates.');
+        newsletterForm.reset();
+      }
+    });
+  }
 
   /* ── Toast notification ── */
   var toastTimer;
   function showToast(message) {
+    if (!toastMsg || !toast) return;
     clearTimeout(toastTimer);
     toastMsg.textContent = message;
     toast.hidden = false;
@@ -133,7 +196,7 @@
 
   /* ── Scroll-triggered fade-in ── */
   var fadeEls = document.querySelectorAll(
-    '.feature-item, .collection-card, .product-card, .about-content, .about-image-wrap, .newsletter-content'
+    '.feature-item, .product-card, .about-content, .about-image-wrap, .newsletter-content'
   );
   fadeEls.forEach(function (el) { el.classList.add('fade-up'); });
 
