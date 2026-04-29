@@ -234,6 +234,12 @@
     }
   });
 
+  const paymentOverlay = document.getElementById('payment-overlay');
+  const paymentCloseBtn = document.getElementById('payment-close-btn');
+  const paymentForm = document.getElementById('payment-form');
+  const methodItems = document.querySelectorAll('.method-item');
+  const paymentTotalAmount = document.getElementById('payment-total-amount');
+
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
       if (cartItems.length === 0) {
@@ -241,9 +247,47 @@
         return;
       }
       
-      generateReceipt();
-      receiptOverlay.classList.add('active');
+      paymentTotalAmount.textContent = cartTotalPriceValue.toLocaleString();
+      paymentOverlay.classList.add('active');
       cartSidebar.classList.remove('active');
+    });
+  }
+
+  if (paymentCloseBtn) {
+    paymentCloseBtn.addEventListener('click', () => {
+      paymentOverlay.classList.remove('active');
+    });
+  }
+
+  methodItems.forEach(item => {
+    item.addEventListener('click', () => {
+      methodItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      
+      const method = item.dataset.method;
+      document.getElementById('card-inputs').style.display = method === 'card' ? 'block' : 'none';
+      document.getElementById('paypal-inputs').style.display = method === 'paypal' ? 'block' : 'none';
+      document.getElementById('cod-inputs').style.display = method === 'cod' ? 'block' : 'none';
+    });
+  });
+
+  if (paymentForm) {
+    paymentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const btn = document.getElementById('pay-now-btn');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="spinner"></span> Processing...';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        paymentOverlay.classList.remove('active');
+        generateReceipt();
+        receiptOverlay.classList.add('active');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        showToast('Payment successful!');
+      }, 2000);
     });
   }
 
@@ -306,7 +350,6 @@
       
       updateCartUI();
       
-      // Visual feedback for mobile and desktop
       btn.classList.add('added');
       const originalContent = btn.innerHTML;
       if (window.innerWidth <= 767) {
@@ -318,7 +361,6 @@
       setTimeout(() => {
         btn.classList.remove('added');
         if (window.innerWidth <= 767) {
-          // CSS handles the + via pseudo-element, so we just remove the class
         } else {
           btn.textContent = 'Add to Cart';
         }
