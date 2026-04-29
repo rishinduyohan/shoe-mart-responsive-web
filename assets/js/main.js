@@ -1,10 +1,6 @@
-/* ══════════════════════════════════════
-   ShoeMart — Main JavaScript
-   ══════════════════════════════════════ */
 (function () {
   'use strict';
 
-  /* ── DOM refs ── */
   const header = document.getElementById('site-header');
   const hamburger = document.getElementById('hamburger-btn');
   const nav = document.getElementById('main-nav');
@@ -21,7 +17,6 @@
   let cartTotal = 0;
   let currentSlide = 0;
 
-  /* ── Hero Slider Logic ── */
   const slidesContainer = document.querySelector('.hero-slides');
   const slideCount = document.querySelectorAll('.hero-slide').length;
   
@@ -30,15 +25,13 @@
       currentSlide = (currentSlide + 1) % slideCount;
       const offset = currentSlide * (100 / slideCount);
       slidesContainer.style.transform = `translateX(-${offset}%)`;
-    }, 5000); // Change image every 5 seconds
+    }, 5000);
   }
 
-  /* ── Header scroll effect ── */
   window.addEventListener('scroll', function () {
     header.classList.toggle('scrolled', window.scrollY > 40);
   }, { passive: true });
 
-  /* ── Mobile nav toggle ── */
   hamburger.addEventListener('click', function () {
     const open = hamburger.classList.toggle('open');
     nav.classList.toggle('open', open);
@@ -46,29 +39,26 @@
     document.body.style.overflow = open ? 'hidden' : '';
   });
 
-  // Close nav on link click
   navLinks.forEach(function (link) {
     link.addEventListener('click', function () {
       hamburger.classList.remove('open');
       nav.classList.remove('open');
       hamburger.setAttribute('aria-expanded', 'false');
       document.body.style.overflow = '';
-      // Active state
       navLinks.forEach(function (l) { l.classList.remove('active'); });
       link.classList.add('active');
     });
   });
 
-  /* ── Products Data ── */
   const products = [
-    { id: 1, name: 'Work Shoe', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-casual.png' },
-    { id: 2, name: 'Women Casual', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-runner.png' },
-    { id: 3, name: 'Men Casual', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png' },
-    { id: 4, name: 'Women Casual', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-heels.png' },
-    { id: 5, name: 'Women Casual', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-boots.png' },
-    { id: 6, name: 'Men Casual', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 5, image: 'assets/images/shoe-loafer.png' },
-    { id: 7, name: 'Unisex Casual', category: 'unisex', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-hiking.png' },
-    { id: 8, name: 'Men Casual', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-runner.png' }
+    { id: 1, name: 'Work Shoe', category: 'men', price: '12,500', oldPrice: '15,000', discount: 16, rating: 4, image: 'assets/images/shoe-casual.png' },
+    { id: 2, name: 'Women Casual', category: 'women', price: '8,900', oldPrice: '12,000', discount: 25, rating: 4, image: 'assets/images/shoe-runner.png' },
+    { id: 3, name: 'Men Casual', category: 'men', price: '14,200', oldPrice: '18,500', discount: 23, rating: 4, image: 'assets/images/shoe-athletic.png' },
+    { id: 4, name: 'Women Casual', category: 'women', price: '9,500', oldPrice: '13,000', discount: 27, rating: 4, image: 'assets/images/shoe-heels.png' },
+    { id: 5, name: 'Women Casual', category: 'women', price: '11,000', oldPrice: '14,500', discount: 24, rating: 4, image: 'assets/images/shoe-boots.png' },
+    { id: 6, name: 'Men Casual', category: 'men', price: '15,800', oldPrice: '20,000', discount: 21, rating: 5, image: 'assets/images/shoe-loafer.png' },
+    { id: 7, name: 'Unisex Casual', category: 'unisex', price: '13,400', oldPrice: '17,000', discount: 21, rating: 4, image: 'assets/images/shoe-hiking.png' },
+    { id: 8, name: 'Men Casual', category: 'men', price: '10,500', oldPrice: '13,500', discount: 22, rating: 4, image: 'assets/images/shoe-runner.png' }
   ];
 
   const productsGrid = document.getElementById('products-grid');
@@ -92,8 +82,8 @@
           <h3>${product.name}</h3>
           <div class="product-rating">${'★'.repeat(product.rating)}${'☆'.repeat(5 - product.rating)}</div>
           <div class="product-price">
-            <span class="price-current">$${product.price}</span>
-            <span class="price-old">$${product.oldPrice}</span>
+            <span class="price-current">Rs. ${product.price}</span>
+            <span class="price-old">Rs. ${product.oldPrice}</span>
             <span class="price-discount">${product.discount}% Off</span>
           </div>
         </div>
@@ -102,7 +92,6 @@
     });
   }
 
-  /* ── Product filters ── */
   filterBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       filterBtns.forEach(function (b) {
@@ -115,19 +104,16 @@
     });
   });
 
-  // Initial render
   renderProducts();
 
-  /* ── Load More ── */
   const loadMoreBtn = document.getElementById('load-more-btn');
   if (loadMoreBtn) {
     loadMoreBtn.addEventListener('click', function() {
-      // simulate loading more products
       const extraProducts = [
-        { id: 9, name: 'Casual Comfort', category: 'unisex', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-casual.png' },
-        { id: 10, name: 'Work Pro', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-casual.png' },
-        { id: 11, name: 'Women Style', category: 'women', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-heels.png' },
-        { id: 12, name: 'Men Sport', category: 'men', price: 299.43, oldPrice: 534.33, discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png' }
+        { id: 9, name: 'Casual Comfort', category: 'unisex', price: '9,800', oldPrice: '13,000', discount: 25, rating: 4, image: 'assets/images/shoe-casual.png' },
+        { id: 10, name: 'Work Pro', category: 'men', price: '16,500', oldPrice: '21,000', discount: 21, rating: 4, image: 'assets/images/shoe-casual.png' },
+        { id: 11, name: 'Women Style', category: 'women', price: '11,200', oldPrice: '15,000', discount: 25, rating: 4, image: 'assets/images/shoe-heels.png' },
+        { id: 12, name: 'Men Sport', category: 'men', price: '14,900', oldPrice: '19,500', discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png' }
       ];
       
       extraProducts.forEach(product => {
@@ -135,24 +121,22 @@
       });
       
       renderProducts(document.querySelector('.filter-btn.active').dataset.filter);
-      loadMoreBtn.style.display = 'none'; // hide after loading more for this demo
+      loadMoreBtn.style.display = 'none';
     });
   }
 
-  /* ── Add to cart ── */
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('btn-add-cart')) {
       const btn = e.target;
       cartTotal++;
       cartCount.textContent = cartTotal;
       cartCount.style.animation = 'none';
-      void cartCount.offsetWidth; // reflow
+      void cartCount.offsetWidth;
       cartCount.style.animation = 'pop .3s ease';
       showToast(btn.dataset.product + ' added to cart!');
     }
   });
 
-  /* ── Wishlist toggle ── */
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('wishlist-btn')) {
       const btn = e.target;
@@ -166,7 +150,6 @@
     }
   });
 
-  /* ── Newsletter ── */
   if (newsletterForm) {
     newsletterForm.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -178,7 +161,6 @@
     });
   }
 
-  /* ── Toast notification ── */
   var toastTimer;
   function showToast(message) {
     if (!toastMsg || !toast) return;
@@ -194,7 +176,6 @@
     }, 2800);
   }
 
-  /* ── Scroll-triggered fade-in ── */
   var fadeEls = document.querySelectorAll(
     '.feature-item, .product-card, .about-content, .about-image-wrap, .newsletter-content'
   );
@@ -211,7 +192,6 @@
 
   fadeEls.forEach(function (el) { observer.observe(el); });
 
-  /* ── Active nav on scroll ── */
   var sections = document.querySelectorAll('section[id]');
   window.addEventListener('scroll', function () {
     var scrollY = window.scrollY + 200;
@@ -228,7 +208,6 @@
     });
   }, { passive: true });
 
-  /* ── Keyframe for cart pop ── */
   var style = document.createElement('style');
   style.textContent = '@keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}} @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}';
   document.head.appendChild(style);
