@@ -19,6 +19,19 @@
   const newsletterForm = document.getElementById('newsletter-form');
 
   let cartTotal = 0;
+  let currentSlide = 0;
+
+  /* ── Hero Slider Logic ── */
+  const slidesContainer = document.querySelector('.hero-slides');
+  const slideCount = document.querySelectorAll('.hero-slide').length;
+  
+  if (slidesContainer && slideCount > 0) {
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slideCount;
+      const offset = currentSlide * (100 / slideCount);
+      slidesContainer.style.transform = `translateX(-${offset}%)`;
+    }, 5000); // Change image every 5 seconds
+  }
 
   /* ── Header scroll effect ── */
   window.addEventListener('scroll', function () {
