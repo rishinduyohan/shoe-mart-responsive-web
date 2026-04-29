@@ -27,13 +27,21 @@
   const receiptOverlay = document.getElementById('receipt-overlay');
   const receiptItemsList = document.getElementById('receipt-items');
   const receiptTotal = document.getElementById('receipt-total');
+  const confirmPrintBtn = document.getElementById('confirm-print-btn');
+  const closeReceiptBtn = document.getElementById('close-receipt-btn');
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-message');
   const newsletterForm = document.getElementById('newsletter-form');
 
-  let cartItems = [];
+  let cartItems = JSON.parse(sessionStorage.getItem('shoeMartCart')) || [];
   let cartTotalPriceValue = 0;
   let currentSlide = 0;
+
+  function saveCart() {
+    sessionStorage.setItem('shoeMartCart', JSON.stringify(cartItems));
+  }
+
+  updateCartUI();
 
   if (searchBtn && searchOverlay) {
     searchBtn.addEventListener('click', () => {
@@ -177,9 +185,6 @@
     });
   }
 
-  const confirmPrintBtn = document.getElementById('confirm-print-btn');
-  const closeReceiptBtn = document.getElementById('close-receipt-btn');
-
   if (cartBtn && cartSidebar) {
     cartBtn.addEventListener('click', () => cartSidebar.classList.add('active'));
   }
@@ -213,9 +218,14 @@
         <img src="${item.image}" alt="${item.name}" class="cart-item-img">
         <div class="cart-item-info">
           <h4>${item.name}</h4>
-          <p>Rs. ${item.price.toLocaleString()} x ${item.quantity}</p>
+          <p>Rs. ${item.price.toLocaleString()}</p>
+          <div class="qty-controls">
+            <button class="qty-btn dec-btn" data-index="${index}">-</button>
+            <span class="qty-val">${item.quantity}</span>
+            <button class="qty-btn inc-btn" data-index="${index}">+</button>
+          </div>
         </div>
-        <button class="remove-item" data-index="${index}" style="color: #ff4d4d; font-size: 0.8rem;">Remove</button>
+        <button class="remove-item" data-index="${index}">Remove</button>
       `;
       cartItemsList.appendChild(itemEl);
     });
@@ -224,6 +234,7 @@
     cartTotalDisplay.textContent = 'Rs. ' + total.toLocaleString();
     cartSidebarTotal.textContent = 'Rs. ' + total.toLocaleString();
     cartTotalPriceValue = total;
+    saveCart();
   }
 
   document.addEventListener('click', (e) => {
@@ -231,6 +242,16 @@
       const index = parseInt(e.target.dataset.index);
       cartItems.splice(index, 1);
       updateCartUI();
+    } else if (e.target.classList.contains('inc-btn')) {
+      const index = parseInt(e.target.dataset.index);
+      cartItems[index].quantity++;
+      updateCartUI();
+    } else if (e.target.classList.contains('dec-btn')) {
+      const index = parseInt(e.target.dataset.index);
+      if (cartItems[index].quantity > 1) {
+        cartItems[index].quantity--;
+        updateCartUI();
+      }
     }
   });
 
@@ -265,9 +286,18 @@
       item.classList.add('active');
       
       const method = item.dataset.method;
-      document.getElementById('card-inputs').style.display = method === 'card' ? 'block' : 'none';
-      document.getElementById('paypal-inputs').style.display = method === 'paypal' ? 'block' : 'none';
-      document.getElementById('cod-inputs').style.display = method === 'cod' ? 'block' : 'none';
+      const cardSection = document.getElementById('card-inputs');
+      const paypalSection = document.getElementById('paypal-inputs');
+      const codSection = document.getElementById('cod-inputs');
+
+      cardSection.style.display = method === 'card' ? 'block' : 'none';
+      paypalSection.style.display = method === 'paypal' ? 'block' : 'none';
+      codSection.style.display = method === 'cod' ? 'block' : 'none';
+
+      // Fix "invalid form control is not focusable" by toggling required
+      cardSection.querySelectorAll('input').forEach(input => {
+        input.required = (method === 'card');
+      });
     });
   });
 
