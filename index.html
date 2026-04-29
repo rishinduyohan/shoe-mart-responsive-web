@@ -93,6 +93,58 @@
     </div>
   </header>
 
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-sidebar-header">
+      <h3>Your Cart</h3>
+      <button class="cart-close" id="cart-close-btn" aria-label="Close cart">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-items" id="cart-items-list">
+      <p class="empty-cart-msg">Your cart is empty.</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-summary">
+        <span>Total:</span>
+        <span class="cart-summary-total" id="cart-sidebar-total">Rs. 0.00</span>
+      </div>
+      <button class="btn btn-primary btn-checkout" id="checkout-btn">Checkout & Print Bill</button>
+    </div>
+  </div>
+
+  <div class="receipt-overlay" id="receipt-overlay" hidden>
+    <div class="receipt-modal" id="printable-receipt">
+      <div class="receipt-header">
+        <h2>ShoeMart</h2>
+        <p>Official Purchase Receipt</p>
+        <span id="receipt-date"></span>
+      </div>
+      <div class="receipt-body">
+        <table class="receipt-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody id="receipt-items"></tbody>
+        </table>
+        <div class="receipt-total-row">
+          <span>Total Amount:</span>
+          <span id="receipt-total"></span>
+        </div>
+      </div>
+      <div class="receipt-footer">
+        <p>Thank you for shopping with ShoeMart!</p>
+        <div class="receipt-actions">
+          <button class="btn-print no-print" id="confirm-print-btn">Confirm & Print</button>
+          <button class="btn-close-receipt no-print" id="close-receipt-btn">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <main id="main-content">
 
     <section class="hero-banner" id="hero" aria-labelledby="hero-heading">

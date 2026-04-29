@@ -18,11 +18,20 @@
   const searchClose = document.getElementById('search-close');
   const searchInput = document.getElementById('search-input');
   const searchForm = document.getElementById('search-form');
+  const cartBtn = document.getElementById('cart-btn');
+  const cartSidebar = document.getElementById('cart-sidebar');
+  const cartCloseBtn = document.getElementById('cart-close-btn');
+  const cartItemsList = document.getElementById('cart-items-list');
+  const cartSidebarTotal = document.getElementById('cart-sidebar-total');
+  const checkoutBtn = document.getElementById('checkout-btn');
+  const receiptOverlay = document.getElementById('receipt-overlay');
+  const receiptItemsList = document.getElementById('receipt-items');
+  const receiptTotal = document.getElementById('receipt-total');
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-message');
   const newsletterForm = document.getElementById('newsletter-form');
 
-  let cartCountValue = 0;
+  let cartItems = [];
   let cartTotalPriceValue = 0;
   let currentSlide = 0;
 
@@ -95,7 +104,7 @@
   const products = [
     { id: 1, name: 'Work Shoe', category: 'men', price: '12,500', oldPrice: '15,000', discount: 16, rating: 4, image: 'assets/images/shoe-casual.png', priceValue: 12500 },
     { id: 2, name: 'Women Casual', category: 'women', price: '8,900', oldPrice: '12,000', discount: 25, rating: 4, image: 'assets/images/shoe-runner.png', priceValue: 8900 },
-    { id: 3, name: 'Men Casual', category: 'men', price: '14,200', oldPrice: '18,500', discount: 23, rating: 4, image: 'assets/images/shoe-athletic.png', priceValue: 14200 },
+    { id: 3, name: 'Men Casual', category: 'men', price: '14,200', oldPrice: '18,500', discount: 23, rating: 4, image: 'assets/images/hero-banner-3.png', priceValue: 14200 },
     { id: 4, name: 'Women Casual', category: 'women', price: '9,500', oldPrice: '13,000', discount: 27, rating: 4, image: 'assets/images/shoe-heels.png', priceValue: 9500 },
     { id: 5, name: 'Women Casual', category: 'women', price: '11,000', oldPrice: '14,500', discount: 24, rating: 4, image: 'assets/images/shoe-boots.png', priceValue: 11000 },
     { id: 6, name: 'Men Casual', category: 'men', price: '15,800', oldPrice: '20,000', discount: 21, rating: 5, image: 'assets/images/shoe-loafer.png', priceValue: 15800 },
@@ -154,7 +163,7 @@
     loadMoreBtn.addEventListener('click', function() {
       const extraProducts = [
         { id: 9, name: 'Casual Comfort', category: 'unisex', price: '9,800', oldPrice: '13,000', discount: 25, rating: 4, image: 'assets/images/shoe-casual.png', priceValue: 9800 },
-        { id: 10, name: 'Work Pro', category: 'men', price: '16,500', oldPrice: '21,000', discount: 21, rating: 4, image: 'assets/images/shoe-casual.png', priceValue: 16500 },
+        { id: 10, name: 'Work Pro', category: 'men', price: '16,500', oldPrice: '21,000', discount: 21, rating: 4, image: 'assets/images/hero-banner-2.png', priceValue: 16500 },
         { id: 11, name: 'Women Style', category: 'women', price: '11,200', oldPrice: '15,000', discount: 25, rating: 4, image: 'assets/images/shoe-heels.png', priceValue: 11200 },
         { id: 12, name: 'Men Sport', category: 'men', price: '14,900', oldPrice: '19,500', discount: 24, rating: 4, image: 'assets/images/shoe-athletic.png', priceValue: 14900 }
       ];
@@ -168,24 +177,157 @@
     });
   }
 
+  const confirmPrintBtn = document.getElementById('confirm-print-btn');
+  const closeReceiptBtn = document.getElementById('close-receipt-btn');
+
+  if (cartBtn && cartSidebar) {
+    cartBtn.addEventListener('click', () => cartSidebar.classList.add('active'));
+  }
+
+  if (cartCloseBtn && cartSidebar) {
+    cartCloseBtn.addEventListener('click', () => cartSidebar.classList.remove('active'));
+  }
+
+  function updateCartUI() {
+    if (!cartItemsList) return;
+    
+    if (cartItems.length === 0) {
+      cartItemsList.innerHTML = '<p class="empty-cart-msg">Your cart is empty.</p>';
+      cartBadge.textContent = '0';
+      cartTotalDisplay.textContent = 'Rs. 0.00';
+      cartSidebarTotal.textContent = 'Rs. 0.00';
+      return;
+    }
+
+    cartItemsList.innerHTML = '';
+    let total = 0;
+    let count = 0;
+
+    cartItems.forEach((item, index) => {
+      total += item.price * item.quantity;
+      count += item.quantity;
+
+      const itemEl = document.createElement('div');
+      itemEl.className = 'cart-item';
+      itemEl.innerHTML = `
+        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+        <div class="cart-item-info">
+          <h4>${item.name}</h4>
+          <p>Rs. ${item.price.toLocaleString()} x ${item.quantity}</p>
+        </div>
+        <button class="remove-item" data-index="${index}" style="color: #ff4d4d; font-size: 0.8rem;">Remove</button>
+      `;
+      cartItemsList.appendChild(itemEl);
+    });
+
+    cartBadge.textContent = count;
+    cartTotalDisplay.textContent = 'Rs. ' + total.toLocaleString();
+    cartSidebarTotal.textContent = 'Rs. ' + total.toLocaleString();
+    cartTotalPriceValue = total;
+  }
+
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('remove-item')) {
+      const index = parseInt(e.target.dataset.index);
+      cartItems.splice(index, 1);
+      updateCartUI();
+    }
+  });
+
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', () => {
+      if (cartItems.length === 0) {
+        showToast('Your cart is empty!');
+        return;
+      }
+      
+      generateReceipt();
+      receiptOverlay.classList.add('active');
+      cartSidebar.classList.remove('active');
+    });
+  }
+
+  function generateReceipt() {
+    if (!receiptItemsList) return;
+    
+    receiptItemsList.innerHTML = '';
+    const date = new Date().toLocaleString();
+    document.getElementById('receipt-date').textContent = 'Date: ' + date;
+
+    cartItems.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.quantity}</td>
+        <td>Rs. ${(item.price * item.quantity).toLocaleString()}</td>
+      `;
+      receiptItemsList.appendChild(row);
+    });
+
+    receiptTotal.textContent = 'Rs. ' + cartTotalPriceValue.toLocaleString();
+  }
+
+  if (confirmPrintBtn) {
+    confirmPrintBtn.addEventListener('click', () => {
+      window.print();
+      cartItems = [];
+      updateCartUI();
+      receiptOverlay.classList.remove('active');
+      showToast('Purchase successful! Thank you.');
+    });
+  }
+
+  if (closeReceiptBtn) {
+    closeReceiptBtn.addEventListener('click', () => {
+      receiptOverlay.classList.remove('active');
+    });
+  }
+
   document.addEventListener('click', function(e) {
     if (e.target.classList.contains('btn-add-cart')) {
       const btn = e.target;
-      const price = parseInt(btn.dataset.price);
+      const id = btn.dataset.id;
       const name = btn.dataset.name;
+      const price = parseInt(btn.dataset.price);
+      const product = products.find(p => p.id == id);
       
-      cartCountValue++;
-      cartTotalPriceValue += price;
+      const existing = cartItems.find(item => item.id == id);
+      if (existing) {
+        existing.quantity++;
+      } else {
+        cartItems.push({
+          id: id,
+          name: name,
+          price: price,
+          quantity: 1,
+          image: product ? product.image : 'assets/images/shoe-casual.png'
+        });
+      }
       
+      updateCartUI();
+      
+      // Visual feedback for mobile and desktop
+      btn.classList.add('added');
+      const originalContent = btn.innerHTML;
+      if (window.innerWidth <= 767) {
+        btn.setAttribute('data-original', '+');
+      } else {
+        btn.textContent = 'Added!';
+      }
+      
+      setTimeout(() => {
+        btn.classList.remove('added');
+        if (window.innerWidth <= 767) {
+          // CSS handles the + via pseudo-element, so we just remove the class
+        } else {
+          btn.textContent = 'Add to Cart';
+        }
+      }, 1500);
+
       if (cartBadge) {
-        cartBadge.textContent = cartCountValue;
         cartBadge.style.animation = 'none';
         void cartBadge.offsetWidth;
         cartBadge.style.animation = 'pop .3s ease';
-      }
-      
-      if (cartTotalDisplay) {
-        cartTotalDisplay.textContent = 'Rs. ' + cartTotalPriceValue.toLocaleString();
       }
       
       showToast(name + ' added to cart!');
