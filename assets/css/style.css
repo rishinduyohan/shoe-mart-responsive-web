@@ -1677,3 +1677,160 @@ h3 {
     grid-template-columns: 2fr 1fr 1fr 1.5fr;
   }
 }
+
+/* Admin Panel Styles */
+.admin-panel {
+  padding: 80px 0;
+  background: #fff;
+  width: var(--container);
+  margin: 0 auto;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--grey-dark);
+  padding-bottom: 10px;
+}
+
+.admin-tab-btn {
+  padding: 10px 20px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  transition: var(--transition);
+}
+
+.admin-tab-btn.active {
+  color: var(--mocha);
+  border-bottom-color: var(--mocha);
+}
+
+.admin-tab-content {
+  display: none;
+}
+
+.admin-tab-content.active {
+  display: block;
+}
+
+.admin-actions {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.admin-table th, .admin-table td {
+  padding: 15px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--grey);
+}
+
+.admin-table th {
+  background: var(--grey);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.admin-table td {
+  font-size: 0.9rem;
+}
+
+.admin-prod-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  background: var(--grey);
+  border-radius: var(--radius-sm);
+}
+
+.btn-edit {
+  color: var(--blue-dark);
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.btn-delete {
+  color: #ff4d4d;
+  font-weight: 600;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: #fff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--grey);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-close {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+.modal-form {
+  padding: 20px;
+}
+
+.modal-form .form-group {
+  margin-bottom: 15px;
+}
+
+.modal-form label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.modal-form input, .modal-form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--grey-dark);
+  border-radius: var(--radius-sm);
+}
+
+.modal-form .btn-primary {
+  width: 100%;
+  margin-top: 10px;
+}

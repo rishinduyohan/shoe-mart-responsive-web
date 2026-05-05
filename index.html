@@ -312,6 +312,62 @@
       </div>
     </section>
 
+    <!-- Customer Login Modal -->
+    <div class="modal-overlay" id="login-modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Customer Login</h3>
+          <button class="modal-close" id="login-modal-close">&times;</button>
+        </div>
+        <form id="login-form" class="modal-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="login-email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="login-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary">Sign In</button>
+          <p style="text-align: center; margin-top: 15px; font-size: 0.85rem;">
+            New here? <a href="javascript:void(0)" id="switch-to-register" style="color: var(--mocha); font-weight: 600;">Create an account</a>
+          </p>
+          <hr style="border: 0; border-top: 1px solid var(--grey); margin: 15px 0;">
+          <p style="text-align: center; font-size: 0.8rem;">
+            Are you an admin? <a href="admin-login.html" style="color: var(--text-muted); text-decoration: underline;">Login here</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
+    <!-- Customer Registration Modal -->
+    <div class="modal-overlay" id="register-modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Create Account</h3>
+          <button class="modal-close" id="register-modal-close">&times;</button>
+        </div>
+        <form id="register-form" class="modal-form">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="reg-name" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="reg-email" required placeholder="your@email.com">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="reg-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary">Register Now</button>
+          <p style="text-align: center; margin-top: 15px; font-size: 0.85rem;">
+            Already have an account? <a href="javascript:void(0)" id="switch-to-login" style="color: var(--mocha); font-weight: 600;">Sign In</a>
+          </p>
+        </form>
+      </div>
+    </div>
+
   </main>
 
   <footer class="site-footer" id="contact">
@@ -333,6 +389,7 @@
           <li><a href="#hero">Home</a></li>
           <li><a href="#products">Shop</a></li>
           <li><a href="#about">About</a></li>
+          <li><a href="admin-login.html" style="color: var(--mocha); font-weight: 600;">Admin Portal</a></li>
         </ul>
       </nav>
       <nav class="footer-nav" aria-label="Customer service">
