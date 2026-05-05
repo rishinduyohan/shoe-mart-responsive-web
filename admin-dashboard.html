@@ -487,6 +487,12 @@
     </div>
 
     <script>
+        // Security Check
+        const adminUser = JSON.parse(sessionStorage.getItem('shoeMartAdmin'));
+        if (!adminUser) {
+            window.location.href = 'admin-login.html';
+        }
+
         const API_URL = 'http://localhost:8080/api';
         
         async function fetchData(endpoint) {
