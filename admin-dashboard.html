@@ -41,6 +41,8 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            z-index: 1001;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-brand {
@@ -103,6 +105,7 @@
             margin-left: var(--sidebar-width);
             flex: 1;
             padding: 40px 60px;
+            transition: margin 0.3s ease;
         }
 
         .header-adm {
@@ -110,6 +113,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40px;
+            gap: 20px;
         }
 
         .header-adm h1 {
@@ -118,12 +122,19 @@
             margin: 0;
         }
 
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1/3);
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 24px;
             margin-bottom: 40px;
-            display: flex;
         }
 
         .stat-card {
@@ -132,7 +143,6 @@
             border-radius: 20px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             border: 1px solid var(--border);
-            flex: 1;
         }
 
         .stat-card h3 {
@@ -162,6 +172,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .card-header h2 {
@@ -170,11 +182,17 @@
             margin: 0;
         }
 
-        /* Table */
+        /* Table Responsiveness */
+        .admin-table-wrap {
+            overflow-x: auto;
+            width: 100%;
+        }
+
         .admin-table-adm {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.95rem;
+            min-width: 600px;
         }
 
         .admin-table-adm th {
@@ -194,10 +212,6 @@
             color: var(--text-main);
         }
 
-        .admin-table-adm tr:last-child td {
-            border-bottom: none;
-        }
-
         .prod-img-adm {
             width: 48px;
             height: 48px;
@@ -206,13 +220,47 @@
             background: var(--bg-main);
         }
 
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .header-adm {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-adm {
+                padding: 25px;
+                width: 95%;
+            }
+        }
+
         /* Modals */
         .modal-overlay-adm {
             position: fixed;
             inset: 0;
             background: rgba(15, 23, 42, 0.5);
             backdrop-filter: blur(8px);
-            z-index: 1000;
+            z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
@@ -229,6 +277,7 @@
             border-radius: 24px;
             padding: 40px;
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            margin: 20px;
         }
 
         .form-group-adm {
@@ -265,10 +314,6 @@
             color: #fff;
         }
 
-        .btn-primary-adm:hover {
-            background: #334155;
-        }
-
         .action-btn-adm {
             background: none;
             border: none;
@@ -291,36 +336,33 @@
 </head>
 <body>
     <div class="admin-layout">
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-brand">
                 <div style="width: 32px; height: 32px; background: var(--primary); border-radius: 8px;"></div>
                 ShoeMart.
             </div>
             <ul class="sidebar-nav">
                 <li class="nav-item">
-                    <a class="nav-link-adm active" data-target="manage-products">
-                        Products
-                    </a>
+                    <a class="nav-link-adm active" data-target="manage-products">Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link-adm" data-target="manage-users">
-                        Customers
-                    </a>
+                    <a class="nav-link-adm" data-target="manage-users">Customers</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link-adm" data-target="manage-orders">
-                        Orders
-                    </a>
+                    <a class="nav-link-adm" data-target="manage-orders">Orders</a>
                 </li>
             </ul>
-            <div class="logout-btn" onclick="window.location.href='admin-login.html'">
-                Logout
-            </div>
+            <div class="logout-btn" onclick="window.location.href='admin-login.html'">Logout</div>
         </aside>
 
         <main class="main-content">
             <div class="header-adm">
-                <h1 id="page-title">Inventory Overview</h1>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button class="mobile-toggle" id="sidebar-toggle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <h1 id="page-title">Inventory Overview</h1>
+                </div>
                 <div id="product-action-header">
                     <button class="btn-adm btn-primary-adm" id="add-product-btn">Add New Product</button>
                 </div>
@@ -341,66 +383,69 @@
                 </div>
             </div>
 
-            <!-- Products Tab -->
             <div id="manage-products" class="tab-content-adm active">
                 <div class="content-card">
                     <div class="card-header">
                         <h2>All Products</h2>
                     </div>
-                    <table class="admin-table-adm">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Stock Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-products-list"></tbody>
-                    </table>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table-adm">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-list"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Users Tab -->
             <div id="manage-users" class="tab-content-adm">
                 <div class="content-card">
                     <div class="card-header">
                         <h2>Customers</h2>
                     </div>
-                    <table class="admin-table-adm">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Username</th>
-                                <th>Email</th>
-                                <th>Account Role</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-users-list"></tbody>
-                    </table>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table-adm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Account Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-list"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Orders Tab -->
             <div id="manage-orders" class="tab-content-adm">
                 <div class="content-card">
                     <div class="card-header">
                         <h2>Recent Orders</h2>
                     </div>
-                    <table class="admin-table-adm">
-                        <thead>
-                            <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Total Amount</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-orders-list"></tbody>
-                    </table>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table-adm">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Total Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-list"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </main>
@@ -588,7 +633,16 @@
                 } else {
                     document.getElementById('product-action-header').style.display = 'none';
                 }
+                // Close sidebar on mobile
+                if(window.innerWidth <= 768) {
+                    document.getElementById('sidebar').classList.remove('active');
+                }
             });
+        });
+
+        // Mobile Toggle
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
         });
 
         loadAdminData();

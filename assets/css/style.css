@@ -1788,11 +1788,12 @@ h3 {
 
 .modal {
   background: #fff;
-  width: 100%;
+  width: 90%;
   max-width: 500px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
+  margin: 20px;
 }
 
 .modal-header {

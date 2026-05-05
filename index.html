@@ -368,6 +368,34 @@
       </div>
     </div>
 
+    <!-- Profile Details Modal -->
+    <div class="modal-overlay" id="profile-modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Account Details</h3>
+          <button class="modal-close" id="profile-modal-close">&times;</button>
+        </div>
+        <div class="modal-form" style="padding: 30px;">
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 5px;">Username</p>
+              <p id="profile-display-name" style="font-size: 1.1rem; font-weight: 500; color: var(--mocha-dark);"></p>
+            </div>
+            <div>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 5px;">Email Address</p>
+              <p id="profile-display-email" style="font-size: 1rem; color: var(--text-main);"></p>
+            </div>
+            <div>
+              <p style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 5px;">Account Role</p>
+              <p id="profile-display-role" style="font-size: 0.9rem; color: var(--mocha); font-weight: 600;"></p>
+            </div>
+            <hr style="border: 0; border-top: 1px solid var(--grey); margin: 10px 0;">
+            <button id="logout-btn" class="btn btn-primary" style="background: #ef4444; border: none;">Logout Account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <footer class="site-footer" id="contact">

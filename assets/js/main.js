@@ -26,15 +26,19 @@
   const profileBtn = document.getElementById('profile-btn');
   const loginModal = document.getElementById('login-modal-overlay');
   const registerModal = document.getElementById('register-modal-overlay');
+  const profileDetailsModal = document.getElementById('profile-modal-overlay');
+  const profileModalClose = document.getElementById('profile-modal-close');
   const loginModalClose = document.getElementById('login-modal-close');
   const registerModalClose = document.getElementById('register-modal-close');
   const loginForm = document.getElementById('login-form');
   const registerForm = document.getElementById('register-form');
   const switchToRegister = document.getElementById('switch-to-register');
   const switchToLogin = document.getElementById('switch-to-login');
+  const logoutBtn = document.getElementById('logout-btn');
 
   let products = [];
   let cartItems = JSON.parse(sessionStorage.getItem('shoeMartCart')) || [];
+  let currentUser = JSON.parse(localStorage.getItem('shoeMartUser')) || null;
   let cartTotalPriceValue = 0;
 
   // --- Core Functions ---
@@ -66,7 +70,11 @@
   }
 
   function saveCart() {
-    sessionStorage.setItem('shoeMartCart', JSON.stringify(cartItems));
+    if (cartItems.length === 0) {
+      sessionStorage.removeItem('shoeMartCart');
+    } else {
+      sessionStorage.setItem('shoeMartCart', JSON.stringify(cartItems));
+    }
   }
 
   function showToast(message) {
@@ -125,6 +133,7 @@
       cartBadge.textContent = '0';
       cartTotalDisplay.textContent = 'Rs. 0.00';
       cartSidebarTotal.textContent = 'Rs. 0.00';
+      saveCart();
       return;
     }
 
@@ -161,23 +170,63 @@
     saveCart();
   }
 
+  function updateAuthUI() {
+    if (!profileBtn) return;
+    if (currentUser) {
+      profileBtn.querySelector('span').textContent = currentUser.username;
+      profileBtn.classList.add('logged-in');
+    } else {
+      profileBtn.querySelector('span').textContent = 'My profile';
+      profileBtn.classList.remove('logged-in');
+    }
+  }
+
+  function openProfileDetails() {
+    if (!currentUser) return;
+    document.getElementById('profile-display-name').textContent = currentUser.username;
+    document.getElementById('profile-display-email').textContent = currentUser.email;
+    document.getElementById('profile-display-role').textContent = currentUser.role;
+    profileDetailsModal.classList.add('active');
+  }
+
   // --- Initial Data Load ---
 
   async function loadInitialData() {
     products = await fetchData('products');
     renderProducts();
+    updateAuthUI();
   }
 
   // --- Event Listeners ---
 
   // Auth Modals
-  if (profileBtn) profileBtn.addEventListener('click', () => loginModal.classList.add('active'));
-  if (loginModalClose) loginModalClose.addEventListener('click', () => loginModal.classList.remove('active'));
-  if (registerModalClose) registerModalClose.addEventListener('click', () => registerModal.classList.remove('active'));
+  if (profileBtn) {
+    profileBtn.addEventListener('click', () => {
+      if (currentUser) {
+        openProfileDetails();
+      } else {
+        loginModal.classList.add('active');
+      }
+    });
+  }
+  if (loginModalClose) {
+    loginModalClose.addEventListener('click', () => {
+      loginModal.classList.remove('active');
+      loginForm.reset();
+    });
+  }
+  if (registerModalClose) {
+    registerModalClose.addEventListener('click', () => {
+      registerModal.classList.remove('active');
+      registerForm.reset();
+    });
+  }
+  if (profileModalClose) profileModalClose.addEventListener('click', () => profileDetailsModal.classList.remove('active'));
 
   if (switchToRegister) {
     switchToRegister.addEventListener('click', () => {
       loginModal.classList.remove('active');
+      loginForm.reset();
       registerModal.classList.add('active');
     });
   }
@@ -185,15 +234,45 @@
   if (switchToLogin) {
     switchToLogin.addEventListener('click', () => {
       registerModal.classList.remove('active');
+      registerForm.reset();
       loginModal.classList.add('active');
     });
   }
 
-  if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      showToast('Login successful! Welcome back.');
+  // Close modals on outside click
+  window.addEventListener('click', (e) => {
+    if (e.target === loginModal) {
       loginModal.classList.remove('active');
+      loginForm.reset();
+    }
+    if (e.target === registerModal) {
+      registerModal.classList.remove('active');
+      registerForm.reset();
+    }
+    if (e.target === profileDetailsModal) {
+      profileDetailsModal.classList.remove('active');
+    }
+  });
+
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const loginData = {
+        email: document.getElementById('login-email').value,
+        password: document.getElementById('login-password').value
+      };
+      
+      const user = await postData('users/login', loginData);
+      if (user) {
+        currentUser = user;
+        localStorage.setItem('shoeMartUser', JSON.stringify(user));
+        showToast(`Welcome back, ${user.username}!`);
+        loginForm.reset();
+        loginModal.classList.remove('active');
+        updateAuthUI();
+      } else {
+        showToast('Invalid email or password.');
+      }
     });
   }
 
@@ -210,11 +289,22 @@
       const result = await postData('users', userData);
       if (result) {
         showToast('Account created successfully! Please login.');
+        registerForm.reset();
         registerModal.classList.remove('active');
         loginModal.classList.add('active');
       } else {
         showToast('Registration failed. Try again.');
       }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      currentUser = null;
+      localStorage.removeItem('shoeMartUser');
+      profileDetailsModal.classList.remove('active');
+      updateAuthUI();
+      showToast('Logged out successfully.');
     });
   }
 
