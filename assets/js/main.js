@@ -453,6 +453,52 @@
     closeReceiptBtn.addEventListener('click', () => receiptOverlay.classList.remove('active'));
   }
 
+  const confirmPrintBtn = document.getElementById('confirm-print-btn');
+  if (confirmPrintBtn) {
+    confirmPrintBtn.addEventListener('click', () => {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // Receipt Design
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(28);
+      doc.setTextColor(165, 149, 111); // Mocha color
+      doc.text("ShoeMart", 105, 30, { align: 'center' });
+      
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(12);
+      doc.setTextColor(100);
+      doc.text("Official Purchase Receipt", 105, 40, { align: 'center' });
+      doc.text(`Date: ${new Date().toLocaleString()}`, 105, 48, { align: 'center' });
+      
+      doc.setDrawColor(230);
+      doc.line(20, 55, 190, 55);
+
+      // Items Table
+      doc.autoTable({
+        startY: 65,
+        head: [['Item', 'Qty', 'Price (Rs.)']],
+        body: cartItems.map(item => [item.name, item.quantity, (item.price * item.quantity).toLocaleString()]),
+        theme: 'striped',
+        headStyles: { fillColor: [165, 149, 111] },
+        styles: { fontSize: 10, cellPadding: 5 }
+      });
+
+      const finalY = doc.lastAutoTable.finalY + 10;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.setTextColor(30);
+      doc.text(`Total Amount: Rs. ${cartTotalPriceValue.toLocaleString()}`, 190, finalY, { align: 'right' });
+      
+      doc.setFont("helvetica", "italic");
+      doc.setFontSize(10);
+      doc.setTextColor(150);
+      doc.text("Thank you for shopping with ShoeMart!", 105, finalY + 20, { align: 'center' });
+
+      doc.save(`ShoeMart_Receipt_${new Date().getTime()}.pdf`);
+    });
+  }
+
   // Start initialization
   loadInitialData();
   updateCartUI();

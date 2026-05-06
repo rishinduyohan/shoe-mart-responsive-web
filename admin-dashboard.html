@@ -820,9 +820,42 @@
         window.exportToPDF = () => {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
-            doc.text("ShoeMart Sales Report", 14, 20);
-            doc.autoTable({ startY: 30, head: [['Product', 'Category', 'Price']], body: products.map(p => [p.name, p.category, p.priceValue || 0]) });
-            doc.save('report.pdf');
+            
+            // Premium Header
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(28);
+            doc.setTextColor(165, 149, 111); // Mocha color
+            doc.text("ShoeMart", 105, 30, { align: 'center' });
+            
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text("Executive Inventory & Sales Report", 105, 40, { align: 'center' });
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 105, 47, { align: 'center' });
+            
+            doc.setDrawColor(230);
+            doc.line(20, 55, 190, 55);
+
+            // Products Table
+            doc.autoTable({
+                startY: 65,
+                head: [['Product Name', 'Category', 'Price (Rs.)', 'Stock Status']],
+                body: products.map(p => [p.name, p.category, (p.priceValue || 0).toLocaleString(), 'In Stock']),
+                theme: 'striped',
+                headStyles: { fillColor: [165, 149, 111] },
+                styles: { fontSize: 10, cellPadding: 4 }
+            });
+
+            const finalY = doc.lastAutoTable.finalY + 15;
+            doc.setFontSize(12);
+            doc.setTextColor(30);
+            doc.text(`Total Inventory Value: ${document.getElementById('stat-revenue').textContent}`, 190, finalY, { align: 'right' });
+            
+            doc.setFontSize(9);
+            doc.setTextColor(150);
+            doc.text("Confidential ShoeMart Administrative Report", 105, finalY + 20, { align: 'center' });
+
+            doc.save(`ShoeMart_Sales_Report_${new Date().getTime()}.pdf`);
         };
 
         window.exportToExcel = () => {
