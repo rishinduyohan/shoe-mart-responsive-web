@@ -1835,3 +1835,87 @@ h3 {
   width: 100%;
   margin-top: 10px;
 }
+/* Discount UI */
+.discount-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ef4444;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.price-old {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.9rem;
+  margin-left: 10px;
+  font-weight: 400;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+}
+
+/* Product Detail View */
+.product-view-content {
+  max-width: 900px !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.product-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.product-detail-image {
+  position: relative;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.product-detail-image img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.5s ease;
+}
+
+.product-detail-image:hover img {
+  transform: scale(1.1);
+}
+
+.product-detail-info {
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.qv-category {
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: var(--mocha);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .product-detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .product-detail-image {
+    padding: 20px;
+  }
+  .product-detail-info {
+    padding: 30px 20px;
+  }
+}

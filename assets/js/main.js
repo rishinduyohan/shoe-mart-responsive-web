@@ -93,9 +93,9 @@
   function renderProducts(filter = 'all') {
     if (!productsGrid) return;
     productsGrid.innerHTML = '';
-    
-    const filteredProducts = filter === 'all' 
-      ? products 
+
+    const filteredProducts = filter === 'all'
+      ? products
       : products.filter(p => p.category === filter || (filter === 'casual' && (p.name || '').toLowerCase().includes('casual')));
 
     if (filteredProducts.length === 0) {
@@ -107,9 +107,10 @@
       const card = document.createElement('article');
       card.className = 'product-card';
       const price = product.priceValue || product.price || 0;
-      
+
       card.innerHTML = `
         <div class="product-img-wrap">
+          ${product.discount > 0 ? `<span class="discount-badge">-${product.discount}%</span>` : ''}
           <img src="${product.image || 'assets/images/shoe-casual.png'}" alt="${product.name}" loading="lazy">
           <button class="btn-add-cart" data-id="${product.id}" data-name="${product.name}" data-price="${price}" data-image="${product.image}">Add to Cart</button>
         </div>
@@ -118,6 +119,7 @@
           <div class="product-rating">★★★★☆</div>
           <div class="product-price">
             <span class="price-current">Rs. ${price.toLocaleString()}</span>
+            ${product.discount > 0 ? `<span class="price-old">Rs. ${(product.oldPrice || price).toLocaleString()}</span>` : ''}
           </div>
         </div>
       `;
@@ -127,7 +129,7 @@
 
   function updateCartUI() {
     if (!cartItemsList) return;
-    
+
     if (cartItems.length === 0) {
       cartItemsList.innerHTML = '<p class="empty-cart-msg">Your cart is empty.</p>';
       cartBadge.textContent = '0';
@@ -261,7 +263,7 @@
         email: document.getElementById('login-email').value,
         password: document.getElementById('login-password').value
       };
-      
+
       const user = await postData('users/login', loginData);
       if (user) {
         currentUser = user;
@@ -285,7 +287,7 @@
         password: document.getElementById('reg-password').value,
         role: 'CUSTOMER'
       };
-      
+
       const result = await postData('users', userData);
       if (result) {
         showToast('Account created successfully! Please login.');
@@ -418,7 +420,7 @@
         cartItems = [];
         updateCartUI();
         paymentOverlay.classList.remove('active');
-        
+
         document.getElementById('receipt-date').textContent = 'Date: ' + new Date().toLocaleString();
         const list = document.getElementById('receipt-items');
         list.innerHTML = '';
@@ -428,7 +430,7 @@
         document.getElementById('receipt-total').textContent = 'Rs. ' + cartTotalPriceValue.toLocaleString();
         receiptOverlay.classList.add('active');
       }
-      
+
       btn.innerHTML = originalText;
       btn.disabled = false;
     });

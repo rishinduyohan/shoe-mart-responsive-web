@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,7 +80,8 @@
             cursor: pointer;
         }
 
-        .nav-link-adm:hover, .nav-link-adm.active {
+        .nav-link-adm:hover,
+        .nav-link-adm.active {
             background: rgba(255, 255, 255, 0.05);
             color: #fff;
         }
@@ -141,7 +143,7 @@
             background: var(--bg-card);
             padding: 24px;
             border-radius: 20px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
         }
 
@@ -161,7 +163,7 @@
         .content-card {
             background: var(--bg-card);
             border-radius: 24px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--border);
             overflow: hidden;
         }
@@ -231,23 +233,29 @@
             .mobile-toggle {
                 display: block;
             }
+
             .sidebar {
                 transform: translateX(-100%);
             }
+
             .sidebar.active {
                 transform: translateX(0);
             }
+
             .main-content {
                 margin-left: 0;
                 padding: 20px;
             }
+
             .header-adm {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+
             .modal-adm {
                 padding: 25px;
                 width: 95%;
@@ -276,7 +284,7 @@
             max-width: 500px;
             border-radius: 24px;
             padding: 40px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             margin: 20px;
         }
 
@@ -323,17 +331,24 @@
             margin-right: 12px;
         }
 
-        .btn-edit-adm { color: #3b82f6; }
-        .btn-delete-adm { color: #ef4444; }
+        .btn-edit-adm {
+            color: #3b82f6;
+        }
+
+        .btn-delete-adm {
+            color: #ef4444;
+        }
 
         .tab-content-adm {
             display: none;
         }
+
         .tab-content-adm.active {
             display: block;
         }
     </style>
 </head>
+
 <body>
     <div class="admin-layout">
         <aside class="sidebar" id="sidebar">
@@ -359,7 +374,12 @@
             <div class="header-adm">
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <button class="mobile-toggle" id="sidebar-toggle">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
                     </button>
                     <h1 id="page-title">Inventory Overview</h1>
                 </div>
@@ -461,25 +481,31 @@
                     <label>Product Name</label>
                     <input type="text" id="prod-name" class="form-input-adm" required>
                 </div>
-                <div class="form-group-adm">
-                    <label>Category</label>
-                    <select id="prod-category" class="form-input-adm">
-                        <option value="men">Men</option>
-                        <option value="women">Women</option>
-                        <option value="unisex">Unisex</option>
-                        <option value="casual">Casual</option>
-                    </select>
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group-adm" style="flex: 1;">
+                        <label>Category</label>
+                        <select id="prod-category" class="form-input-adm">
+                            <option value="men">Men</option>
+                            <option value="women">Women</option>
+                            <option value="unisex">Unisex</option>
+                            <option value="casual">Casual</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group-adm">
                     <label>Price (Rs.)</label>
                     <input type="number" id="prod-price" class="form-input-adm" required>
                 </div>
                 <div class="form-group-adm">
-                    <label>Image URL</label>
-                    <input type="text" id="prod-image" class="form-input-adm" value="assets/images/shoe-casual.png">
+                    <label>Product Image</label>
+                    <input type="file" id="prod-image-file" class="form-input-adm" accept="image/*">
+                    <input type="hidden" id="prod-image-url">
+                    <p style="font-size: 0.75rem; color: var(--text-sub); margin-top: 5px;">Upload a new image or leave
+                        empty to keep current.</p>
                 </div>
                 <div style="display: flex; gap: 12px; margin-top: 30px;">
-                    <button type="submit" class="btn-adm btn-primary-adm" style="flex: 1;">Save Product</button>
+                    <button type="submit" class="btn-adm btn-primary-adm" style="flex: 1;" id="save-btn">Save
+                        Product</button>
                     <button type="button" class="btn-adm" style="background: #f1f5f9;" id="modal-cancel">Cancel</button>
                 </div>
             </form>
@@ -494,7 +520,7 @@
         }
 
         const API_URL = 'http://localhost:8080/api';
-        
+
         async function fetchData(endpoint) {
             try {
                 const r = await fetch(`${API_URL}/${endpoint}`);
@@ -525,7 +551,7 @@
         async function loadAdminData() {
             const fetchedProducts = await fetchData('products');
             products = Array.isArray(fetchedProducts) ? fetchedProducts : [];
-            
+
             const list = document.getElementById('admin-products-list');
             list.innerHTML = '';
             products.forEach(p => {
@@ -588,8 +614,11 @@
             document.getElementById('product-id').value = p.id;
             document.getElementById('prod-name').value = p.name;
             document.getElementById('prod-category').value = p.category;
-            document.getElementById('prod-price').value = p.price;
-            document.getElementById('prod-image').value = p.image;
+            document.getElementById('prod-price').value = p.priceValue || p.price;
+            document.getElementById('prod-image-url').value = p.image;
+            // Store original price to compare
+            document.getElementById('product-form').dataset.originalPrice = p.priceValue || p.price;
+            document.getElementById('product-form').dataset.currentOldPrice = p.oldPrice || (p.priceValue || p.price);
             document.getElementById('product-modal-overlay').classList.add('active');
         };
 
@@ -604,6 +633,8 @@
             document.getElementById('modal-title').textContent = 'Add Product';
             document.getElementById('product-form').reset();
             document.getElementById('product-id').value = '';
+            document.getElementById('prod-image-url').value = '';
+            delete document.getElementById('product-form').dataset.originalPrice;
             document.getElementById('product-modal-overlay').classList.add('active');
         });
 
@@ -613,15 +644,72 @@
 
         document.getElementById('product-form').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.textContent = 'Uploading...';
+            saveBtn.disabled = true;
+
+            let imageUrl = document.getElementById('prod-image-url').value;
+            const imageFile = document.getElementById('prod-image-file').files[0];
+
+            // --- Cloudinary Frontend Config ---
+            const CLOUDINARY_URL = 'https://api.cloudinary.com/v1_1/dbndqriih/image/upload';
+            const CLOUDINARY_UPLOAD_PRESET = 'shoemart';
+            // ----------------------------------
+
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('file', imageFile);
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+                try {
+                    const uploadRes = await fetch(CLOUDINARY_URL, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    imageUrl = uploadData.secure_url;
+                } catch (err) {
+                    console.error('Cloudinary upload failed:', err);
+                    alert('Image upload failed. Using default image.');
+                    imageUrl = imageUrl || 'assets/images/shoe-casual.png';
+                }
+            }
+
+            const newPrice = parseFloat(document.getElementById('prod-price').value);
+            const originalPrice = parseFloat(document.getElementById('product-form').dataset.originalPrice || newPrice);
+            const currentOldPrice = parseFloat(document.getElementById('product-form').dataset.currentOldPrice || newPrice);
+
+            let finalOldPrice = currentOldPrice;
+            let finalDiscount = 0;
+
+            if (newPrice < originalPrice) {
+                // Price dropped
+                finalOldPrice = originalPrice;
+                finalDiscount = Math.round(((originalPrice - newPrice) / originalPrice) * 100);
+            } else if (newPrice > originalPrice) {
+                // Price increased, reset discount
+                finalOldPrice = newPrice;
+                finalDiscount = 0;
+            } else {
+                // Price same, keep existing discount logic if any
+                finalOldPrice = currentOldPrice;
+                finalDiscount = Math.round(((currentOldPrice - newPrice) / currentOldPrice) * 100) || 0;
+            }
+
             const data = {
                 id: document.getElementById('product-id').value || null,
                 name: document.getElementById('prod-name').value,
                 category: document.getElementById('prod-category').value,
-                price: parseFloat(document.getElementById('prod-price').value),
-                image: document.getElementById('prod-image').value,
-                priceValue: parseFloat(document.getElementById('prod-price').value)
+                discount: finalDiscount,
+                oldPrice: finalOldPrice,
+                price: newPrice,
+                image: imageUrl || 'assets/images/shoe-casual.png',
+                priceValue: newPrice
             };
+
             await postData('products', data);
+            saveBtn.textContent = 'Save Product';
+            saveBtn.disabled = false;
             document.getElementById('product-modal-overlay').classList.remove('active');
             loadAdminData();
         });
@@ -634,13 +722,13 @@
                 document.querySelectorAll('.tab-content-adm').forEach(c => c.classList.remove('active'));
                 document.getElementById(btn.dataset.target).classList.add('active');
                 document.getElementById('page-title').textContent = btn.innerText;
-                if(btn.dataset.target === 'manage-products') {
+                if (btn.dataset.target === 'manage-products') {
                     document.getElementById('product-action-header').style.display = 'block';
                 } else {
                     document.getElementById('product-action-header').style.display = 'none';
                 }
                 // Close sidebar on mobile
-                if(window.innerWidth <= 768) {
+                if (window.innerWidth <= 768) {
                     document.getElementById('sidebar').classList.remove('active');
                 }
             });
@@ -654,4 +742,5 @@
         loadAdminData();
     </script>
 </body>
+
 </html>
