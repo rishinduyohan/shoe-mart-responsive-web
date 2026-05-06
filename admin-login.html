@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Access - ShoeMart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/admin-login.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Admin Portal</h1>
+            <p>Welcome back, please login to continue.</p>
+        </div>
+        <form id="admin-login-form">
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" id="admin-email" class="form-input" required placeholder="admin@shoemart.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="admin-password" class="form-input" required placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn-submit">Sign In to Dashboard</button>
+        </form>
+        <a href="index.html" class="back-link">← Return to ShoeMart Store</a>
+    </div>
+
+    <script src="./assets/js/admin-login.js"></script>
+</body>
+</html>

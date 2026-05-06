@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ShoeMart Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/admin-style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="admin-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon"></div>
+                <span>ShoeMart.</span>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="nav-item">
+                    <a class="nav-link-adm active" data-target="dashboard-overview">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-adm" data-target="manage-products">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        </svg>
+                        Products
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-adm" data-target="manage-users">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Customers
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link-adm" data-target="manage-orders">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Orders
+                    </a>
+                </li>
+            </ul>
+            <div class="logout-btn" onclick="window.location.href='admin-login.html'">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                Logout
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="header-adm">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button id="sidebar-toggle">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                    <h1 id="page-title">Executive Overview</h1>
+                </div>
+                <div class="report-actions">
+                    <div id="product-action-header" style="display: none;">
+                        <button class="btn-adm btn-primary-adm" id="add-product-btn"
+                            style="background: var(--text-primary);">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Add New Product
+                        </button>
+                    </div>
+                    <button class="btn-adm btn-secondary-adm" onclick="exportToExcel()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        Export XLSX
+                    </button>
+                    <button class="btn-adm btn-primary-adm" onclick="exportToPDF()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <path d="M12 18V12"></path>
+                            <path d="M9 15l3 3 3-3"></path>
+                        </svg>
+                        Download PDF
+                    </button>
+                </div>
+            </div>
+
+            <div id="dashboard-overview" class="tab-content-adm active">
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="document.querySelector('[data-target=manage-products]').click()">
+                        <h3>Inventory Status</h3>
+                        <p id="stat-products">0 Products</p>
+                    </div>
+                    <div class="stat-card" onclick="document.querySelector('[data-target=manage-users]').click()">
+                        <h3>Client Base</h3>
+                        <p id="stat-users">0 Customers</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Net Earnings</h3>
+                        <p id="stat-revenue">Rs. 0</p>
+                    </div>
+                </div>
+                <div class="content-card" style="padding: 35px;">
+                    <div class="card-header" style="padding: 0 0 25px 0; border: none;">
+                        <h2>Financial Performance</h2>
+                    </div>
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manage-products" class="tab-content-adm">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2>All Products</h2>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table-adm">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-products-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manage-users" class="tab-content-adm">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2>Customers</h2>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table-adm">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-users-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="manage-orders" class="tab-content-adm">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h2>Orders</h2>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table-adm">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-orders-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay-adm" id="product-modal-overlay">
+        <div class="modal-adm">
+            <h2 id="modal-title" style="margin-top: 0; margin-bottom: 24px; font-weight: 600;">Product Management</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block;margin-bottom:5px;font-size:0.8rem;color:var(--text-secondary);">Name</label>
+                    <input type="text" id="prod-name" required
+                        style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:4px;outline:none;">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:15px;">
+                    <div>
+                        <label
+                            style="display:block;margin-bottom:5px;font-size:0.8rem;color:var(--text-secondary);">Category</label>
+                        <select id="prod-category"
+                            style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:4px;outline:none;">
+                            <option value="Running">Running</option>
+                            <option value="Casual">Casual</option>
+                            <option value="Formal">Formal</option>
+                            <option value="Sports">Sports</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label
+                            style="display:block;margin-bottom:5px;font-size:0.8rem;color:var(--text-secondary);">Price (Rs.)</label>
+                        <input type="number" id="prod-price" required
+                            style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:4px;outline:none;">
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label
+                        style="display:block;margin-bottom:5px;font-size:0.8rem;color:var(--text-secondary);">Image</label>
+                    <input type="file" id="prod-image-file" accept="image/*" style="margin-bottom:8px;font-size:0.8rem;">
+                    <input type="text" id="prod-image-url" placeholder="Or Image URL"
+                        style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:4px;outline:none;">
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:25px;">
+                    <button type="button" class="btn-adm" id="modal-cancel" style="background:#f1f5f9;">Cancel</button>
+                    <button type="submit" class="btn-adm btn-primary-adm" id="save-btn">Save Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="./assets/js/admin-script.js"></script>
+</body>
+
+</html>
