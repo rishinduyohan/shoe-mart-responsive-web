@@ -94,9 +94,14 @@
     if (!productsGrid) return;
     productsGrid.innerHTML = '';
 
+    console.log('Rendering products with filter:', filter);
+    console.log('Total products available:', products.length);
+
     const filteredProducts = filter === 'all'
       ? products
-      : products.filter(p => p.category === filter || (filter === 'casual' && (p.name || '').toLowerCase().includes('casual')));
+      : products.filter(p => (p.category || '').toLowerCase() === filter.toLowerCase() || (filter === 'casual' && (p.name || '').toLowerCase().includes('casual')));
+
+    console.log('Filtered products count:', filteredProducts.length);
 
     if (filteredProducts.length === 0) {
       productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No products found at the moment.</p>';
@@ -194,9 +199,16 @@
   // --- Initial Data Load ---
 
   async function loadInitialData() {
-    products = await fetchData('products');
-    renderProducts();
-    updateAuthUI();
+    console.log('loadInitialData started');
+    try {
+      products = await fetchData('products');
+      console.log('Fetched products in loadInitialData:', products);
+      renderProducts();
+      updateAuthUI();
+      console.log('loadInitialData completed');
+    } catch (err) {
+      console.error('Critical error in loadInitialData:', err);
+    }
   }
 
   // --- Event Listeners ---

@@ -674,6 +674,7 @@
                 const list = document.getElementById('admin-products-list');
                 list.innerHTML = '';
                 products.forEach(p => {
+                    console.log('Admin Product Data:', p);
                     list.innerHTML += `
                         <tr>
                             <td style="display:flex;align-items:center;gap:12px;">
