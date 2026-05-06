@@ -632,6 +632,7 @@
     <script>
         const API_URL = 'http://localhost:8080/api';
         let products = [];
+        let orders = [];
 
         async function fetchData(endpoint) {
             try {
@@ -705,11 +706,12 @@
 
             // Load Orders
             try {
-                const orders = await fetchData('orders');
+                const fetchedOrders = await fetchData('orders');
+                orders = Array.isArray(fetchedOrders) ? fetchedOrders : [];
                 const orderList = document.getElementById('admin-orders-list');
                 orderList.innerHTML = '';
                 let total = 0;
-                (Array.isArray(orders) ? orders : []).forEach(o => {
+                orders.forEach(o => {
                     total += o.totalAmount;
                     orderList.innerHTML += `<tr><td>#ORD-${o.id}</td><td>${o.customerName}</td><td style="font-weight:600;">Rs. ${o.totalAmount.toLocaleString()}</td><td>${new Date(o.orderDate).toLocaleDateString()}</td><td><span class="badge badge-success">Completed</span></td></tr>`;
                 });
@@ -830,30 +832,38 @@
             doc.setFont("helvetica", "normal");
             doc.setFontSize(11);
             doc.setTextColor(100);
-            doc.text("Executive Inventory & Sales Report", 105, 40, { align: 'center' });
+            doc.text("Official Sales & Revenue Report", 105, 40, { align: 'center' });
             doc.text(`Generated on: ${new Date().toLocaleString()}`, 105, 47, { align: 'center' });
             
             doc.setDrawColor(230);
             doc.line(20, 55, 190, 55);
 
-            // Products Table
+            // Sales Table
+            const tableData = orders.map(o => [
+                `#ORD-${o.id}`,
+                o.customerName,
+                new Date(o.orderDate).toLocaleDateString(),
+                o.items ? o.items.reduce((sum, item) => sum + item.quantity, 0) : 0,
+                `Rs. ${o.totalAmount.toLocaleString()}`
+            ]);
+
             doc.autoTable({
                 startY: 65,
-                head: [['Product Name', 'Category', 'Price (Rs.)', 'Stock Status']],
-                body: products.map(p => [p.name, p.category, (p.priceValue || 0).toLocaleString(), 'In Stock']),
+                head: [['Order ID', 'Customer', 'Date', 'Qty', 'Total (Rs.)']],
+                body: tableData,
                 theme: 'striped',
                 headStyles: { fillColor: [165, 149, 111] },
-                styles: { fontSize: 10, cellPadding: 4 }
+                styles: { fontSize: 9, cellPadding: 4 }
             });
 
             const finalY = doc.lastAutoTable.finalY + 15;
             doc.setFontSize(12);
             doc.setTextColor(30);
-            doc.text(`Total Inventory Value: ${document.getElementById('stat-revenue').textContent}`, 190, finalY, { align: 'right' });
+            doc.text(`Net Revenue: ${document.getElementById('stat-revenue').textContent}`, 190, finalY, { align: 'right' });
             
             doc.setFontSize(9);
             doc.setTextColor(150);
-            doc.text("Confidential ShoeMart Administrative Report", 105, finalY + 20, { align: 'center' });
+            doc.text("Confidential ShoeMart Sales Performance Report", 105, finalY + 20, { align: 'center' });
 
             doc.save(`ShoeMart_Sales_Report_${new Date().getTime()}.pdf`);
         };

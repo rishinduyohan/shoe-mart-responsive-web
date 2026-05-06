@@ -40,6 +40,7 @@
   let cartItems = JSON.parse(sessionStorage.getItem('shoeMartCart')) || [];
   let currentUser = JSON.parse(localStorage.getItem('shoeMartUser')) || null;
   let cartTotalPriceValue = 0;
+  let lastOrderedItems = []; // For PDF generation after cart is cleared
 
   // --- Core Functions ---
 
@@ -405,6 +406,28 @@
     });
   }
 
+  const methodItems = document.querySelectorAll('.method-item');
+  methodItems.forEach(item => {
+    item.addEventListener('click', () => {
+      methodItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      const method = item.dataset.method;
+      
+      document.getElementById('card-inputs').style.display = (method === 'card') ? 'block' : 'none';
+      document.getElementById('paypal-inputs').style.display = (method === 'paypal') ? 'block' : 'none';
+      document.getElementById('cod-inputs').style.display = (method === 'cod') ? 'block' : 'none';
+      
+      const payBtn = document.getElementById('pay-now-btn');
+      if (method === 'cod') {
+        payBtn.textContent = 'Confirm COD Order';
+      } else if (method === 'paypal') {
+        payBtn.textContent = 'Proceed to PayPal';
+      } else {
+        payBtn.textContent = `Pay Rs. ${cartTotalPriceValue.toLocaleString()}`;
+      }
+    });
+  });
+
   const paymentForm = document.getElementById('payment-form');
   if (paymentForm) {
     paymentForm.addEventListener('submit', async (e) => {
@@ -429,9 +452,11 @@
       const savedOrder = await postData('orders', orderData);
       if (savedOrder) {
         showToast('Order placed successfully!');
+        lastOrderedItems = [...cartItems]; // Store items for PDF
         cartItems = [];
         updateCartUI();
         paymentOverlay.classList.remove('active');
+        paymentForm.reset(); // Clear bank details
 
         document.getElementById('receipt-date').textContent = 'Date: ' + new Date().toLocaleString();
         const list = document.getElementById('receipt-items');
@@ -478,7 +503,7 @@
       doc.autoTable({
         startY: 65,
         head: [['Item', 'Qty', 'Price (Rs.)']],
-        body: cartItems.map(item => [item.name, item.quantity, (item.price * item.quantity).toLocaleString()]),
+        body: lastOrderedItems.map(item => [item.name, item.quantity, (item.price * item.quantity).toLocaleString()]),
         theme: 'striped',
         headStyles: { fillColor: [165, 149, 111] },
         styles: { fontSize: 10, cellPadding: 5 }
