@@ -106,7 +106,7 @@
     filteredProducts.forEach(product => {
       const card = document.createElement('article');
       card.className = 'product-card';
-      const price = product.priceValue || product.price || 0;
+      const price = product.priceValue !== undefined ? product.priceValue : (product.price || 0);
 
       card.innerHTML = `
         <div class="product-img-wrap">

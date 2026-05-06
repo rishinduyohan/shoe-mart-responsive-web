@@ -635,9 +635,16 @@
 
         async function fetchData(endpoint) {
             try {
+                console.log(`Fetching ${endpoint}...`);
                 const r = await fetch(`${API_URL}/${endpoint}`);
-                return await r.json();
-            } catch (e) { return []; }
+                if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
+                const data = await r.json();
+                console.log(`Data received for ${endpoint}:`, data);
+                return data;
+            } catch (e) { 
+                console.error(`Fetch error for ${endpoint}:`, e);
+                return []; 
+            }
         }
 
         async function saveProduct(data) {
@@ -658,45 +665,58 @@
         }
 
         async function loadAdminData() {
-            const fetched = await fetchData('products');
-            products = Array.isArray(fetched) ? fetched : [];
-            const list = document.getElementById('admin-products-list');
-            list.innerHTML = '';
-            products.forEach(p => {
-                list.innerHTML += `
-                    <tr>
-                        <td style="display:flex;align-items:center;gap:12px;">
-                            <img src="${p.image}" class="prod-img-adm"><span>${p.name}</span>
-                        </td>
-                        <td style="text-transform:capitalize;">${p.category}</td>
-                        <td style="font-weight:600;">Rs. ${p.price.toLocaleString()}</td>
-                        <td><span class="badge badge-success">In Stock</span></td>
-                        <td>
-                            <button class="action-btn-adm btn-edit-adm" onclick="editProduct(${p.id})">Edit</button>
-                            <button class="action-btn-adm btn-delete-adm" onclick="deleteItem('products', ${p.id})">Delete</button>
-                        </td>
-                    </tr>`;
-            });
-            document.getElementById('stat-products').textContent = `${products.length} Products`;
+            console.log('Starting admin data load...');
+            
+            // Load Products
+            try {
+                const fetched = await fetchData('products');
+                products = Array.isArray(fetched) ? fetched : [];
+                const list = document.getElementById('admin-products-list');
+                list.innerHTML = '';
+                products.forEach(p => {
+                    list.innerHTML += `
+                        <tr>
+                            <td style="display:flex;align-items:center;gap:12px;">
+                                <img src="${p.image}" class="prod-img-adm"><span>${p.name}</span>
+                            </td>
+                            <td style="text-transform:capitalize;">${p.category}</td>
+                            <td style="font-weight:600;">Rs. ${(p.priceValue || 0).toLocaleString()}</td>
+                            <td><span class="badge badge-success">In Stock</span></td>
+                            <td>
+                                <button class="action-btn-adm btn-edit-adm" onclick="editProduct(${p.id})">Edit</button>
+                                <button class="action-btn-adm btn-delete-adm" onclick="deleteItem('products', ${p.id})">Delete</button>
+                            </td>
+                        </tr>`;
+                });
+                document.getElementById('stat-products').textContent = `${products.length} Products`;
+            } catch (err) { console.error('Error loading products:', err); }
 
-            const users = await fetchData('users');
-            const userList = document.getElementById('admin-users-list');
-            userList.innerHTML = '';
-            (Array.isArray(users) ? users : []).forEach(u => {
-                userList.innerHTML += `<tr><td>#${u.id}</td><td>${u.username}</td><td>${u.email}</td><td><span class="badge badge-info">${u.role || 'User'}</span></td><td><button class="action-btn-adm btn-delete-adm" onclick="deleteItem('users', ${u.id})">Remove</button></td></tr>`;
-            });
-            document.getElementById('stat-users').textContent = `${users.length} Customers`;
+            // Load Users
+            try {
+                const users = await fetchData('users');
+                const userList = document.getElementById('admin-users-list');
+                userList.innerHTML = '';
+                (Array.isArray(users) ? users : []).forEach(u => {
+                    userList.innerHTML += `<tr><td>#${u.id}</td><td>${u.username}</td><td>${u.email}</td><td><span class="badge badge-info">${u.role || 'User'}</span></td><td><button class="action-btn-adm btn-delete-adm" onclick="deleteItem('users', ${u.id})">Remove</button></td></tr>`;
+                });
+                document.getElementById('stat-users').textContent = `${(Array.isArray(users) ? users.length : 0)} Customers`;
+            } catch (err) { console.error('Error loading users:', err); }
 
-            const orders = await fetchData('orders');
-            const orderList = document.getElementById('admin-orders-list');
-            orderList.innerHTML = '';
-            let total = 0;
-            (Array.isArray(orders) ? orders : []).forEach(o => {
-                total += o.totalAmount;
-                orderList.innerHTML += `<tr><td>#ORD-${o.id}</td><td>${o.customerName}</td><td style="font-weight:600;">Rs. ${o.totalAmount.toLocaleString()}</td><td>${new Date(o.orderDate).toLocaleDateString()}</td><td><span class="badge badge-success">Completed</span></td></tr>`;
-            });
-            document.getElementById('stat-revenue').textContent = 'Rs. ' + total.toLocaleString();
-            initChart(orders);
+            // Load Orders
+            try {
+                const orders = await fetchData('orders');
+                const orderList = document.getElementById('admin-orders-list');
+                orderList.innerHTML = '';
+                let total = 0;
+                (Array.isArray(orders) ? orders : []).forEach(o => {
+                    total += o.totalAmount;
+                    orderList.innerHTML += `<tr><td>#ORD-${o.id}</td><td>${o.customerName}</td><td style="font-weight:600;">Rs. ${o.totalAmount.toLocaleString()}</td><td>${new Date(o.orderDate).toLocaleDateString()}</td><td><span class="badge badge-success">Completed</span></td></tr>`;
+                });
+                document.getElementById('stat-revenue').textContent = 'Rs. ' + total.toLocaleString();
+                initChart(orders);
+            } catch (err) { console.error('Error loading orders:', err); }
+            
+            console.log('Admin data load sequence completed.');
         }
 
         let chartInstance = null;
@@ -727,7 +747,7 @@
                 document.getElementById('product-id').value = p.id;
                 document.getElementById('prod-name').value = p.name;
                 document.getElementById('prod-category').value = p.category;
-                document.getElementById('prod-price').value = p.price;
+                document.getElementById('prod-price').value = p.priceValue || 0;
                 document.getElementById('prod-image-url').value = p.image;
                 document.getElementById('product-modal-overlay').classList.add('active');
             }
@@ -767,7 +787,7 @@
                 id: document.getElementById('product-id').value || null,
                 name: document.getElementById('prod-name').value,
                 category: document.getElementById('prod-category').value,
-                price: parseFloat(document.getElementById('prod-price').value),
+                priceValue: parseFloat(document.getElementById('prod-price').value),
                 image: imageUrl || 'assets/images/shoe-casual.png'
             };
             await saveProduct(data);
@@ -800,7 +820,7 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             doc.text("ShoeMart Sales Report", 14, 20);
-            doc.autoTable({ startY: 30, head: [['Product', 'Category', 'Price']], body: products.map(p => [p.name, p.category, p.price]) });
+            doc.autoTable({ startY: 30, head: [['Product', 'Category', 'Price']], body: products.map(p => [p.name, p.category, p.priceValue || 0]) });
             doc.save('report.pdf');
         };
 
