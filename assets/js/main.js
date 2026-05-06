@@ -22,7 +22,6 @@
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toast-message');
 
-  // Customer UI Elements
   const profileBtn = document.getElementById('profile-btn');
   const loginModal = document.getElementById('login-modal-overlay');
   const registerModal = document.getElementById('register-modal-overlay');
@@ -40,9 +39,7 @@
   let cartItems = JSON.parse(sessionStorage.getItem('shoeMartCart')) || [];
   let currentUser = JSON.parse(localStorage.getItem('shoeMartUser')) || null;
   let cartTotalPriceValue = 0;
-  let lastOrderedItems = []; // For PDF generation after cart is cleared
-
-  // --- Core Functions ---
+  let lastOrderedItems = [];
 
   async function fetchData(endpoint) {
     try {
@@ -89,20 +86,13 @@
     }, 2800);
   }
 
-  // --- UI Rendering ---
-
   function renderProducts(filter = 'all') {
     if (!productsGrid) return;
     productsGrid.innerHTML = '';
 
-    console.log('Rendering products with filter:', filter);
-    console.log('Total products available:', products.length);
-
     const filteredProducts = filter === 'all'
       ? products
       : products.filter(p => (p.category || '').toLowerCase() === filter.toLowerCase() || (filter === 'casual' && (p.name || '').toLowerCase().includes('casual')));
-
-    console.log('Filtered products count:', filteredProducts.length);
 
     if (filteredProducts.length === 0) {
       productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No products found at the moment.</p>';
@@ -197,24 +187,16 @@
     profileDetailsModal.classList.add('active');
   }
 
-  // --- Initial Data Load ---
-
   async function loadInitialData() {
-    console.log('loadInitialData started');
     try {
       products = await fetchData('products');
-      console.log('Fetched products in loadInitialData:', products);
       renderProducts();
       updateAuthUI();
-      console.log('loadInitialData completed');
     } catch (err) {
       console.error('Critical error in loadInitialData:', err);
     }
   }
 
-  // --- Event Listeners ---
-
-  // Auth Modals
   if (profileBtn) {
     profileBtn.addEventListener('click', () => {
       if (currentUser) {
@@ -254,7 +236,6 @@
     });
   }
 
-  // Close modals on outside click
   window.addEventListener('click', (e) => {
     if (e.target === loginModal) {
       loginModal.classList.remove('active');
@@ -323,7 +304,6 @@
     });
   }
 
-  // Nav & Header
   if (hamburger) {
     hamburger.addEventListener('click', () => {
       const open = hamburger.classList.toggle('open');
@@ -346,7 +326,6 @@
     header.classList.toggle('scrolled', window.scrollY > 40);
   });
 
-  // Filters
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       filterBtns.forEach(b => b.classList.remove('active'));
@@ -355,7 +334,6 @@
     });
   });
 
-  // Cart
   if (cartBtn) cartBtn.addEventListener('click', () => cartSidebar.classList.add('active'));
   if (cartCloseBtn) cartCloseBtn.addEventListener('click', () => cartSidebar.classList.remove('active'));
 
@@ -393,7 +371,6 @@
     }
   });
 
-  // Checkout
   if (checkoutBtn) {
     checkoutBtn.addEventListener('click', () => {
       if (cartItems.length === 0) {
@@ -452,11 +429,11 @@
       const savedOrder = await postData('orders', orderData);
       if (savedOrder) {
         showToast('Order placed successfully!');
-        lastOrderedItems = [...cartItems]; // Store items for PDF
+        lastOrderedItems = [...cartItems];
         cartItems = [];
         updateCartUI();
         paymentOverlay.classList.remove('active');
-        paymentForm.reset(); // Clear bank details
+        paymentForm.reset();
 
         document.getElementById('receipt-date').textContent = 'Date: ' + new Date().toLocaleString();
         const list = document.getElementById('receipt-items');
@@ -484,10 +461,9 @@
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
       
-      // Receipt Design
       doc.setFont("helvetica", "bold");
       doc.setFontSize(28);
-      doc.setTextColor(165, 149, 111); // Mocha color
+      doc.setTextColor(165, 149, 111);
       doc.text("ShoeMart", 105, 30, { align: 'center' });
       
       doc.setFont("helvetica", "normal");
@@ -499,7 +475,6 @@
       doc.setDrawColor(230);
       doc.line(20, 55, 190, 55);
 
-      // Items Table
       doc.autoTable({
         startY: 65,
         head: [['Item', 'Qty', 'Price (Rs.)']],
@@ -524,7 +499,6 @@
     });
   }
 
-  // Start initialization
   loadInitialData();
   updateCartUI();
 
