@@ -908,62 +908,87 @@ h3 {
 
 .hero-banner {
   width: 100%;
+  background: #111; /* Darker background for 3D */
 }
 
 .hero-banner-inner {
   position: relative;
   width: 100%;
   overflow: hidden;
-  aspect-ratio: 16 / 7;
+  height: 85vh;
+  background: url('https://img.freepik.com/free-photo/abstract-luxury-soft-red-background-christmas-valentines-layout-design-studio-room-web-template-business-report-with-smooth-circle-gradient-color_1258-54521.jpg?semt=ais_hybrid&w=740&q=80') no-repeat center center;
+  background-size: cover;
 }
 
 @media (max-width: 767px) {
   .hero-banner-inner {
-    aspect-ratio: 1 / 1;
-    min-height: 400px;
+    height: 70vh;
   }
 }
 
-.hero-slides {
-  position: absolute;
-  inset: 0;
-  width: 300%;
-  height: 100%;
-  display: flex;
-  transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.hero-slide {
-  position: relative;
-  flex: 0 0 33.3333%;
-  width: 33.3333%;
-  height: 100%;
-}
-
-.hero-banner-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.hero-banner-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg,
-      rgba(0, 0, 0, .6) 0%,
-      rgba(0, 0, 0, .3) 45%,
-      transparent 70%);
-  display: flex;
-  align-items: center;
-  padding: 20px;
-}
-
-.hero-banner-content {
+.hero-content-grid {
   width: var(--container);
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  pointer-events: none;
 }
+
+.hero-text-col {
+  pointer-events: auto;
+}
+
+.hero-canvas-col {
+  height: 600px;
+  position: relative;
+  pointer-events: auto;
+}
+
+#shoe-canvas-container {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .hero-content-grid {
+    gap: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-content-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 0;
+  }
+
+  .hero-canvas-col {
+    height: 350px;
+    order: -1; /* Shoe above text on mobile */
+  }
+
+  .hero-banner-actions {
+    justify-content: center;
+  }
+}
+
+/* 3D Loader */
+.loader {
+  border: 4px solid rgba(165, 149, 111, 0.1);
+  border-left-color: var(--mocha);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 
 @media (max-width: 767px) {
   .hero-banner-content {

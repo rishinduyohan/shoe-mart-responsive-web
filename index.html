@@ -12,6 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@400&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -242,28 +244,19 @@
 
     <section class="hero-banner" id="hero" aria-labelledby="hero-heading">
       <div class="hero-banner-inner">
-        <div class="hero-slides">
-          <div class="hero-slide active">
-            <img src="assets/images/hero-banner.png" alt="Premium grey denim sneaker - Super Flash Sale"
-              class="hero-banner-img" width="1200" height="600" loading="eager">
-          </div>
-          <div class="hero-slide">
-            <img src="assets/images/hero-banner-2.png" alt="Elegant tan leather shoe - New Arrivals"
-              class="hero-banner-img" width="1200" height="600" loading="lazy">
-          </div>
-          <div class="hero-slide">
-            <img src="assets/images/hero-banner-3.png" alt="Modern red athletic shoe - Performance Collection"
-              class="hero-banner-img" width="1200" height="600" loading="lazy">
-          </div>
-        </div>
         <div class="hero-banner-overlay">
-          <div class="hero-banner-content">
-            <h1 id="hero-heading" class="hero-banner-title">
-              Super Flash Sale<br><span>50% Off</span>
-            </h1>
-            <div class="hero-banner-actions">
-              <a href="#products" class="btn btn-primary" id="hero-cta">Shop Now</a>
-              <a href="#collections" class="btn btn-outline hero-outline-btn" id="hero-secondary-cta">Explore</a>
+          <div class="hero-content-grid">
+            <div class="hero-text-col">
+              <h1 id="hero-heading" class="hero-banner-title">
+                Super Flash Sale<br><span>50% Off</span>
+              </h1>
+              <div class="hero-banner-actions">
+                <a href="#products" class="btn btn-primary" id="hero-cta">Shop Now</a>
+                <a href="#collections" class="btn btn-outline hero-outline-btn" id="hero-secondary-cta">Explore</a>
+              </div>
+            </div>
+            <div class="hero-canvas-col">
+              <div id="shoe-canvas-container"></div>
             </div>
           </div>
         </div>
@@ -500,6 +493,7 @@
     <p id="toast-message"></p>
   </div>
 
+  <script src="assets/js/3d-shoe.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 
