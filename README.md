@@ -22,12 +22,6 @@ ShoeMart is a high-end, fully responsive e-commerce solution. This frontend impl
   <em>Products</em>
 </p>
 
-<p align="center">
-  <img src="assets/images/screenshots/image.png" width="30%" alt="ShoeMart Mobile Preview" />
-  <br>
-  <em>Fully Responsive Mobile Experience</em>
-</p>
-
 ## 🌟 Key Modules
 
 ### 🧊 3D Hero Experience (New)
